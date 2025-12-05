@@ -10,8 +10,9 @@
 *
 *  @version   1.5
 */
-if (!defined('_PS_VERSION_'))
-exit;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class ArtCokiechoicespro extends Module {
     public function __construct() {
