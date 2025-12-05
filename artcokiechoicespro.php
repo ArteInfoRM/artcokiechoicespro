@@ -1,15 +1,14 @@
 <?php
 /**
-*  2009-2025 Art CookiesChoice Pro
-*
-*  For support feel free to contact us on our website at http://www.arteinformatica.eu
-*
-*  @author    Arte e Informatica <admin@arteinformatica.eu>
-*  @copyright 2009-2025 Arte e Informatica
-*  @license   One Paid Licence By WebSite Using This Module. No Rent. No Sell. No Share.
-*
-*  @version   1.5
-*/
+ *  2009-2025 Tecnoacquisti.com
+ *
+ *  For support feel free to contact us on our website at http://www.tecnoacquisti.com
+ *
+ *  @author    Arte e Informatica <shop@tecnoacquisti.com>
+ *  @copyright 2009-2025 Arte e Informatica
+ *  @license   One Paid Licence By WebSite Using This Module. No Rent. No Sell. No Share.
+ *  @version   1.2.2
+ */
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -758,11 +757,13 @@ class ArtCokiechoicespro extends Module {
     }
 
     public function hookDisplayFooterBefore() {
+        $out = '';
         $position = Configuration::get(Tools::strtoupper($this->name . '_REVOKE'));
 
         if ($position == 1) {
-            return $this->showUnsubscribe();
+            $out .= $this->showUnsubscribe();
         }
+        return $out;
     }
 
     public function hookDisplayFooter() {
@@ -778,18 +779,22 @@ class ArtCokiechoicespro extends Module {
     }
 
     public function hookDisplayFooterAfter() {
+        $out = '';
         $position = Configuration::get(Tools::strtoupper($this->name . '_REVOKE'));
 
         if ($position == 3) {
-            return $this->showUnsubscribe();
+            $out .= $this->showUnsubscribe();
         }
+        return $out;
     }
 
     public function hookCookiesDisable() {
+        $out = '';
         $position = Configuration::get(Tools::strtoupper($this->name . '_REVOKE'));
 
         if ($position == 4) {
-            return $this->showUnsubscribe();
+            $out .=  $this->showUnsubscribe();
         }
+        return $out;
     }
 }
