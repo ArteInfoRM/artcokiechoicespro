@@ -15,12 +15,10 @@ if (!defined('_PS_VERSION_'))
 
 function upgrade_module_1_5_1($object)
 {
+    $object->registerHook('displayFooterBefore');
+    $object->registerHook('displayFooter');
+    $object->registerHook('displayFooterAfter');
+    $object->registerHook('CookiesDisable');
 
-  $object->registerHook('displayFooterBefore');
-  $object->registerHook('displayFooter');
-  $object->registerHook('displayFooterAfter');
-  $object->registerHook('CookiesDisable');
-
-  return true;
-
+    return true;
 }

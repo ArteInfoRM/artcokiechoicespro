@@ -33,20 +33,22 @@ class ArtCokiechoicespro extends Module {
     }
 
     public function install() {
-       $languages = Language::getLanguages(false);
-       $artcookies_text = [];
-       $artcookies_url = [];
-       $artcookies_linktxt = [];
-       $artcookies_buttomtxt = [];
-       $artcookies_reject = [];
+        $languages = Language::getLanguages(false);
+        $artcookies_text = [];
+        $artcookies_url = [];
+        $artcookies_linktxt = [];
+        $artcookies_buttomtxt = [];
+        $artcookies_reject = [];
 
-       foreach ($languages as $lang) {
-           $artcookies_text[$lang['id_lang']] = pSQL('We and selected third parties use cookies or similar technologies for technical purposes and, with your consent, for “experience enhancement”, “measurement” and “targeting and advertising” as specified in the cookie policy. Denying consent may make related features unavailable. You can freely give, deny, or withdraw your consent at any time. To find out more about the categories of personal information collected and the purposes for which such information will be used, please refer to our privacy policy. Use the “Accept” button to consent to the use of such technologies. Use the “Reject” button or close this notice to continue without accepting.');
-           $artcookies_url[$lang['id_lang']] = pSQL('#');
-           $artcookies_linktxt[$lang['id_lang']] = pSQL('Read the Privacy Policy');
-           $artcookies_buttomtxt[$lang['id_lang']] = pSQL('Accept');
-           $artcookies_reject[$lang['id_lang']] = pSQL('Reject');
-       }
+        foreach ($languages as $lang) {
+            $artcookies_text[$lang['id_lang']] = pSQL(
+                'We and selected third parties use cookies or similar technologies for technical purposes and, with your consent, for “experience enhancement”, “measurement” and “targeting and advertising” as specified in the cookie policy. Denying consent may make related features unavailable. You can freely give, deny, or withdraw your consent at any time. To find out more about the categories of personal information collected and the purposes for which such information will be used, please refer to our privacy policy. Use the “Accept” button to consent to the use of such technologies. Use the “Reject” button or close this notice to continue without accepting.'
+            );
+            $artcookies_url[$lang['id_lang']] = pSQL('#');
+            $artcookies_linktxt[$lang['id_lang']] = pSQL('Read the Privacy Policy');
+            $artcookies_buttomtxt[$lang['id_lang']] = pSQL('Accept');
+            $artcookies_reject[$lang['id_lang']] = pSQL('Reject');
+        }
 
        $this->_clearCache('artcookiechoices.tpl');
 
@@ -170,7 +172,6 @@ class ArtCokiechoicespro extends Module {
         $languages = Language::getLanguages(false);
         $artcookies_active = Tools::getValue('ARTCOKIECHOICESPRO_ACTIVE');
         $artcookies_consentmode = Tools::getValue('ARTCOKIECHOICESPRO_CONSENTMODE');
-
         $artcookies_cms = Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_CMS');
         $artcookies_target = Tools::getValue('ARTCOKIECHOICESPRO_TARGET');
         $artcookies_revoke = Tools::getValue('ARTCOKIECHOICESPRO_REVOKE');
