@@ -35,11 +35,11 @@
 <!-- Tab panes -->
 <div class="tab-content">
   <div class="tab-pane {$active_1|escape:'htmlall':'UTF-8'}" id="template_1">
-    {$basic_setting nofilter}
+    {$basic_setting}
   </div>
 
   <div class="tab-pane {$active_2|escape:'htmlall':'UTF-8'}" id="template_2">
-    {$advanced_setting nofilter}
+    {$advanced_setting}
   </div>
 
   <div class="tab-pane" id="template_3">
