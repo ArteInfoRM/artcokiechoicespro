@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c9ef2e832a342d03834041c7744d87ff'] = 'PrestaShop Banner Cookiechoices (Eu Cookie Law) GDPR';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c1f78468b2319d5de7edf13009b00e8f'] = 'Free Cookie Tool: semplice modulo per PrestaShop che visualizza il banner EU Cookie Law basato su Cookiechoices.org di Google. Aggiornato alle nuove disposizioni del Garante della Privacy del 2022.';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_0266804ebcf8ecfb01f418fac76a7ada'] = 'Salvataggio paramenti avanzati effettuato';
