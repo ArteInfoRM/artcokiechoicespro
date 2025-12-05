@@ -52,7 +52,7 @@ class ArtCokiechoicespro extends Module
             $artcookies_reject[$lang['id_lang']] = pSQL('Reject');
         }
 
-       $this->_clearCache('artcookiechoices.tpl');
+        $this->_clearCache('artcookiechoices.tpl');
 
         return parent::install()
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_ACTIVE', '1')
@@ -105,7 +105,7 @@ class ArtCokiechoicespro extends Module
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_DISABLE');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_REVOKE');
 
-       return parent::uninstall();
+        return parent::uninstall();
     }
 
     /**
@@ -142,8 +142,10 @@ class ArtCokiechoicespro extends Module
         $artcookies_disable = Tools::getValue('ARTCOKIECHOICESPRO_DISABLE');
 
         foreach ($languages as $lang) {
-                 $artcookies_url[$lang['id_lang']] = pSQL(Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_EXT_' . $lang['id_lang']));
-            }
+            $artcookies_url[$lang['id_lang']] = pSQL(
+                Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_EXT_' . $lang['id_lang'])
+            );
+        }
 
         Configuration::updateValue('ARTCOKIECHOICESPRO_PRIVACY_EXT', $artcookies_url);
         Configuration::updateValue('ARTCOKIECHOICESPRO_EXTACTIVE', (int) $artcookies_extactive);
@@ -178,10 +180,18 @@ class ArtCokiechoicespro extends Module
         $artcookies_revoke = Tools::getValue('ARTCOKIECHOICESPRO_REVOKE');
 
         foreach ($languages as $lang) {
-            $artcookies_text[$lang['id_lang']] = urldecode(Tools::getValue('ARTCOKIECHOICESPRO_TEXT_' . $lang['id_lang']));
-            $artcookies_linktxt[$lang['id_lang']] = urldecode(Tools::getValue('ARTCOKIECHOICESPRO_LINKTXT_' . $lang['id_lang']));
-            $artcookies_buttomtxt[$lang['id_lang']] = urldecode(Tools::getValue('ARTCOKIECHOICESPRO_BUTTUMTXT_' . $lang['id_lang']));
-            $artcookies_reject[$lang['id_lang']] = urldecode(Tools::getValue('ARTCOKIECHOICESPRO_REJECT_' . $lang['id_lang']));
+            $artcookies_text[$lang['id_lang']] = urldecode(
+                Tools::getValue('ARTCOKIECHOICESPRO_TEXT_' . $lang['id_lang'])
+            );
+            $artcookies_linktxt[$lang['id_lang']] = urldecode(
+                Tools::getValue('ARTCOKIECHOICESPRO_LINKTXT_' . $lang['id_lang'])
+            );
+            $artcookies_buttomtxt[$lang['id_lang']] = urldecode(
+                Tools::getValue('ARTCOKIECHOICESPRO_BUTTUMTXT_' . $lang['id_lang'])
+            );
+            $artcookies_reject[$lang['id_lang']] = urldecode(
+                Tools::getValue('ARTCOKIECHOICESPRO_REJECT_' . $lang['id_lang'])
+            );
         }
 
         Configuration::updateValue('ARTCOKIECHOICESPRO_TEXT', $artcookies_text);
@@ -193,6 +203,7 @@ class ArtCokiechoicespro extends Module
         Configuration::updateValue('ARTCOKIECHOICESPRO_PRIVACY_CMS', (int) $artcookies_cms);
         Configuration::updateValue('ARTCOKIECHOICESPRO_REVOKE', (int) $artcookies_revoke);
         Configuration::updateValue('ARTCOKIECHOICESPRO_TARGET', $artcookies_target);
+
         $basic_setting = $this->renderForm();
         $this->_clearCache('artcookiechoices.tpl');
         $output .= $this->displayConfirmation($this->l('Basic settings updated'));
@@ -207,20 +218,19 @@ class ArtCokiechoicespro extends Module
         true
     );
 
-        $this->context->smarty->assign([
-            'link' => $link,
-            'shop_base_url' => $shop_base_url,
-            'module_dir' => $this->_path,
-            'active_1' => $active_1,
-            'active_2' => $active_2,
-            'basic_setting' => $basic_setting . $output,
-            'advanced_setting' => $advanced_setting . $outputadv,
+    $this->context->smarty->assign([
+        'link' => $link,
+        'shop_base_url' => $shop_base_url,
+        'module_dir' => $this->_path,
+        'active_1' => $active_1,
+        'active_2' => $active_2,
+        'basic_setting' => $basic_setting . $output,
+        'advanced_setting' => $advanced_setting . $outputadv,
         ]);
 
     $this->context->smarty->assign('module_dir', $this->_path);
 
     return $this->display(__FILE__, 'views/templates/admin/configure.tpl');
-
     }
 
     /**
@@ -687,7 +697,7 @@ class ArtCokiechoicespro extends Module
         $art_target = Configuration::get(Tools::strtoupper($this->name . '_TARGET'));
         $art_consentmode = Configuration::get(Tools::strtoupper($this->name . '_CONSENTMODE'));
 
-        if($art_extactive == 0) {
+        if ($art_extactive == 0) {
             $art_privacy_link = $this->context->link->getCMSLink((int) $art_privacy_cms);
         } else {
             $art_privacy_link = Configuration::get(Tools::strtoupper($this->name . '_PRIVACY_EXT'), $active_lang);
@@ -803,9 +813,8 @@ class ArtCokiechoicespro extends Module
         $position = Configuration::get(Tools::strtoupper($this->name . '_REVOKE'));
 
         if ($position == 4) {
-            $out .=  $this->showUnsubscribe();
+            $out .= $this->showUnsubscribe();
         }
-
         return $out;
     }
 }
