@@ -124,113 +124,114 @@ class ArtCokiechoicespro extends Module
         $useSsl = (bool) Configuration::get('PS_SSL_ENABLED_EVERYWHERE') || (bool) Configuration::get('PS_SSL_ENABLED');
         $shop_base_url = $this->context->link->getBaseLink((int) $this->context->shop->id, $useSsl);
 
-    if (Tools::isSubmit('submitAdv')) {
-        $active_1 = '';
-        $active_2 = 'active';
-        $artcookies_url = [];
-        $languages = Language::getLanguages(false);
-        $artcookies_extactive = Tools::getValue('ARTCOKIECHOICESPRO_EXTACTIVE');
-        $artcookies_bcolor = Tools::getValue('ARTCOKIECHOICESPRO_BANNER_COLOR');
-        $artcookies_txtcolor = Tools::getValue('ARTCOKIECHOICESPRO_TEXT_COLOR');
-        $artcookies_cshadow = Tools::getValue('ARTCOKIECHOICESPRO_SHADOW_COLOR');
-        $artcookies_button = Tools::getValue('ARTCOKIECHOICESPRO_BUTTON_COLOR');
-        $artcookies_shadow = Tools::getValue('ARTCOKIECHOICESPRO_SHADOW');
-        $artcookies_tbutton = Tools::getValue('ARTCOKIECHOICESPRO_BTEXT_COLOR');
-        $artloadjs = Tools::getValue('ARTCOKIECHOICESPRO_LOADKJS');
-        $artcookies_compress = Tools::getValue('ARTCOKIECHOICESPRO_COMPRESS');
-        $artcookies_position = Tools::getValue('ARTCOKIECHOICESPRO_POSITION');
-        $artcookies_disable = Tools::getValue('ARTCOKIECHOICESPRO_DISABLE');
+        if (Tools::isSubmit('submitAdv')) {
+            $active_1 = '';
+            $active_2 = 'active';
+            $artcookies_url = [];
+            $languages = Language::getLanguages(false);
+            $artcookies_extactive = Tools::getValue('ARTCOKIECHOICESPRO_EXTACTIVE');
+            $artcookies_bcolor = Tools::getValue('ARTCOKIECHOICESPRO_BANNER_COLOR');
+            $artcookies_txtcolor = Tools::getValue('ARTCOKIECHOICESPRO_TEXT_COLOR');
+            $artcookies_cshadow = Tools::getValue('ARTCOKIECHOICESPRO_SHADOW_COLOR');
+            $artcookies_button = Tools::getValue('ARTCOKIECHOICESPRO_BUTTON_COLOR');
+            $artcookies_shadow = Tools::getValue('ARTCOKIECHOICESPRO_SHADOW');
+            $artcookies_tbutton = Tools::getValue('ARTCOKIECHOICESPRO_BTEXT_COLOR');
+            $artloadjs = Tools::getValue('ARTCOKIECHOICESPRO_LOADKJS');
+            $artcookies_compress = Tools::getValue('ARTCOKIECHOICESPRO_COMPRESS');
+            $artcookies_position = Tools::getValue('ARTCOKIECHOICESPRO_POSITION');
+            $artcookies_disable = Tools::getValue('ARTCOKIECHOICESPRO_DISABLE');
 
-        foreach ($languages as $lang) {
-            $artcookies_url[$lang['id_lang']] = pSQL(
-                Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_EXT_' . $lang['id_lang'])
-            );
+            foreach ($languages as $lang) {
+                $artcookies_url[$lang['id_lang']] = pSQL(
+                    Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_EXT_' . $lang['id_lang'])
+                );
+            }
+
+            Configuration::updateValue('ARTCOKIECHOICESPRO_PRIVACY_EXT', $artcookies_url);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_EXTACTIVE', (int) $artcookies_extactive);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_BANNER_COLOR', pSQL($artcookies_bcolor));
+            Configuration::updateValue('ARTCOKIECHOICESPRO_TEXT_COLOR', pSQL($artcookies_txtcolor));
+            Configuration::updateValue('ARTCOKIECHOICESPRO_SHADOW_COLOR', pSQL($artcookies_cshadow));
+            Configuration::updateValue('ARTCOKIECHOICESPRO_BUTTON_COLOR', pSQL($artcookies_button));
+            Configuration::updateValue('ARTCOKIECHOICESPRO_BTEXT_COLOR', pSQL($artcookies_tbutton));
+            Configuration::updateValue('ARTCOKIECHOICESPRO_POSITION', pSQL($artcookies_position));
+            Configuration::updateValue('ARTCOKIECHOICESPRO_DISABLE', pSQL($artcookies_disable));
+            Configuration::updateValue('ARTCOKIECHOICESPRO_LOADKJS', pSQL($artloadjs));
+            Configuration::updateValue('ARTCOKIECHOICESPRO_SHADOW', (int) $artcookies_shadow);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_COMPRESS', (int) $artcookies_compress);
+
+            $advanced_setting = $this->renderAdvForm();
+            $this->_clearCache('artcookiechoices.tpl');
+            $outputadv .= $this->displayConfirmation($this->l('Advanced settings updated'));
         }
 
-        Configuration::updateValue('ARTCOKIECHOICESPRO_PRIVACY_EXT', $artcookies_url);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_EXTACTIVE', (int) $artcookies_extactive);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_BANNER_COLOR', pSQL($artcookies_bcolor));
-        Configuration::updateValue('ARTCOKIECHOICESPRO_TEXT_COLOR', pSQL($artcookies_txtcolor));
-        Configuration::updateValue('ARTCOKIECHOICESPRO_SHADOW_COLOR', pSQL($artcookies_cshadow));
-        Configuration::updateValue('ARTCOKIECHOICESPRO_BUTTON_COLOR', pSQL($artcookies_button));
-        Configuration::updateValue('ARTCOKIECHOICESPRO_BTEXT_COLOR', pSQL($artcookies_tbutton));
-        Configuration::updateValue('ARTCOKIECHOICESPRO_POSITION', pSQL($artcookies_position));
-        Configuration::updateValue('ARTCOKIECHOICESPRO_DISABLE', pSQL($artcookies_disable));
-        Configuration::updateValue('ARTCOKIECHOICESPRO_LOADKJS', pSQL($artloadjs));
-        Configuration::updateValue('ARTCOKIECHOICESPRO_SHADOW', (int) $artcookies_shadow);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_COMPRESS', (int) $artcookies_compress);
+        if (Tools::isSubmit('submitUpdate')) {
+            $active_1 = 'active';
+            $active_2 = '';
+            $artcookies_text = [];
+            $artcookies_linktxt = [];
+            $artcookies_buttomtxt = [];
+            $artcookies_reject = [];
+            $languages = Language::getLanguages(false);
+            $artcookies_active = Tools::getValue('ARTCOKIECHOICESPRO_ACTIVE');
+            $artcookies_consentmode = Tools::getValue('ARTCOKIECHOICESPRO_CONSENTMODE');
+            $artcookies_cms = Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_CMS');
+            $artcookies_target = Tools::getValue('ARTCOKIECHOICESPRO_TARGET');
+            $artcookies_revoke = Tools::getValue('ARTCOKIECHOICESPRO_REVOKE');
 
-        $advanced_setting = $this->renderAdvForm();
-        $this->_clearCache('artcookiechoices.tpl');
-        $outputadv .= $this->displayConfirmation($this->l('Advanced settings updated'));
-    }
+            foreach ($languages as $lang) {
+                $artcookies_text[$lang['id_lang']] = urldecode(
+                    Tools::getValue('ARTCOKIECHOICESPRO_TEXT_' . $lang['id_lang'])
+                );
+                $artcookies_linktxt[$lang['id_lang']] = urldecode(
+                    Tools::getValue('ARTCOKIECHOICESPRO_LINKTXT_' . $lang['id_lang'])
+                );
+                $artcookies_buttomtxt[$lang['id_lang']] = urldecode(
+                    Tools::getValue('ARTCOKIECHOICESPRO_BUTTUMTXT_' . $lang['id_lang'])
+                );
+                $artcookies_reject[$lang['id_lang']] = urldecode(
+                    Tools::getValue('ARTCOKIECHOICESPRO_REJECT_' . $lang['id_lang'])
+                );
+            }
 
-    if (Tools::isSubmit('submitUpdate')) {
-        $active_1 = 'active';
-        $active_2 = '';
-        $artcookies_text = [];
-        $artcookies_linktxt = [];
-        $artcookies_buttomtxt = [];
-        $artcookies_reject = [];
-        $languages = Language::getLanguages(false);
-        $artcookies_active = Tools::getValue('ARTCOKIECHOICESPRO_ACTIVE');
-        $artcookies_consentmode = Tools::getValue('ARTCOKIECHOICESPRO_CONSENTMODE');
-        $artcookies_cms = Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_CMS');
-        $artcookies_target = Tools::getValue('ARTCOKIECHOICESPRO_TARGET');
-        $artcookies_revoke = Tools::getValue('ARTCOKIECHOICESPRO_REVOKE');
+            Configuration::updateValue('ARTCOKIECHOICESPRO_TEXT', $artcookies_text);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_LINKTXT', $artcookies_linktxt);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_BUTTUMTXT', $artcookies_buttomtxt);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_REJECT', $artcookies_reject);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_ACTIVE', (int) $artcookies_active);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_CONSENTMODE', (int) $artcookies_consentmode);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_PRIVACY_CMS', (int) $artcookies_cms);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_REVOKE', (int) $artcookies_revoke);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_TARGET', $artcookies_target);
 
-        foreach ($languages as $lang) {
-            $artcookies_text[$lang['id_lang']] = urldecode(
-                Tools::getValue('ARTCOKIECHOICESPRO_TEXT_' . $lang['id_lang'])
-            );
-            $artcookies_linktxt[$lang['id_lang']] = urldecode(
-                Tools::getValue('ARTCOKIECHOICESPRO_LINKTXT_' . $lang['id_lang'])
-            );
-            $artcookies_buttomtxt[$lang['id_lang']] = urldecode(
-                Tools::getValue('ARTCOKIECHOICESPRO_BUTTUMTXT_' . $lang['id_lang'])
-            );
-            $artcookies_reject[$lang['id_lang']] = urldecode(
-                Tools::getValue('ARTCOKIECHOICESPRO_REJECT_' . $lang['id_lang'])
-            );
+            $basic_setting = $this->renderForm();
+            $this->_clearCache('artcookiechoices.tpl');
+
+            $output .= $this->displayConfirmation($this->l('Basic settings updated'));
         }
 
-        Configuration::updateValue('ARTCOKIECHOICESPRO_TEXT', $artcookies_text);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_LINKTXT', $artcookies_linktxt);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_BUTTUMTXT', $artcookies_buttomtxt);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_REJECT', $artcookies_reject);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_ACTIVE', (int) $artcookies_active);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_CONSENTMODE', (int) $artcookies_consentmode);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_PRIVACY_CMS', (int) $artcookies_cms);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_REVOKE', (int) $artcookies_revoke);
-        Configuration::updateValue('ARTCOKIECHOICESPRO_TARGET', $artcookies_target);
+        $link = $this->context->link->getModuleLink(
+            $this->name,
+            'disallow',
+            [
+                'token' => md5(_COOKIE_KEY_ . $this->name),
+                ],
+            true
+        );
 
-        $basic_setting = $this->renderForm();
-        $this->_clearCache('artcookiechoices.tpl');
-        $output .= $this->displayConfirmation($this->l('Basic settings updated'));
-    }
+        $this->context->smarty->assign([
+            'link' => $link,
+            'shop_base_url' => $shop_base_url,
+            'module_dir' => $this->_path,
+            'active_1' => $active_1,
+            'active_2' => $active_2,
+            'basic_setting' => $basic_setting . $output,
+            'advanced_setting' => $advanced_setting . $outputadv,
+            ]);
 
-    $link = $this->context->link->getModuleLink(
-        $this->name,
-        'disallow',
-        [
-            'token' => md5(_COOKIE_KEY_ . $this->name),
-            ],
-        true
-    );
+        $this->context->smarty->assign('module_dir', $this->_path);
 
-    $this->context->smarty->assign([
-        'link' => $link,
-        'shop_base_url' => $shop_base_url,
-        'module_dir' => $this->_path,
-        'active_1' => $active_1,
-        'active_2' => $active_2,
-        'basic_setting' => $basic_setting . $output,
-        'advanced_setting' => $advanced_setting . $outputadv,
-        ]);
-
-    $this->context->smarty->assign('module_dir', $this->_path);
-
-    return $this->display(__FILE__, 'views/templates/admin/configure.tpl');
+        return $this->display(__FILE__, 'views/templates/admin/configure.tpl');
     }
 
     /**
@@ -463,7 +464,9 @@ class ArtCokiechoicespro extends Module
 
         $artcookies_url = [];
         foreach ($languages as $language) {
-             $artcookies_url[$language['id_lang']] = pSQL(Configuration::get('ARTCOKIECHOICESPRO_PRIVACY_EXT', $language['id_lang']));
+            $artcookies_url[$language['id_lang']] = pSQL(
+                Configuration::get('ARTCOKIECHOICESPRO_PRIVACY_EXT', $language['id_lang'])
+            );
         }
 
         return [
@@ -660,6 +663,7 @@ class ArtCokiechoicespro extends Module
         if (!$lang) {
             $lang = $this->context->language->id;
         }
+
         $id_shop = (int) $this->context->shop->id;
 
         $cms_pages = CMS::getCMSPages(
@@ -679,7 +683,7 @@ class ArtCokiechoicespro extends Module
 
         $cms_options[] = [
             'name' => $this->l('Select CMS'),
-            'id'   => 0,
+            'id' => 0,
         ];
 
         return $cms_options;
