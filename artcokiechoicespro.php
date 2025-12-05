@@ -447,7 +447,6 @@ class ArtCokiechoicespro extends Module
                         'autoload_rte' => true,
                         'desc' => $this->l('Link to external privacy information'),
                     ],
-
                 ],
                 'submit' => [
                     'title' => $this->l('Save'),
@@ -455,7 +454,6 @@ class ArtCokiechoicespro extends Module
                 ],
             ],
         ];
-
     }
 
     protected function getConfigAdvValues()
@@ -482,9 +480,7 @@ class ArtCokiechoicespro extends Module
             'ARTCOKIECHOICESPRO_POSITION' => Tools::getValue('ARTCOKIECHOICESPRO_POSITION', Configuration::get('ARTCOKIECHOICESPRO_POSITION')),
             'ARTCOKIECHOICESPRO_DISABLE' => Tools::getValue('ARTCOKIECHOICESPRO_DISABLE', Configuration::get('ARTCOKIECHOICESPRO_DISABLE')),
             'ARTCOKIECHOICESPRO_PRIVACY_EXT' => Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_EXT', $artcookies_url),
-
         ];
-
     }
 
     /**
@@ -623,7 +619,6 @@ class ArtCokiechoicespro extends Module
                 ],
             ],
         ];
-
     }
 
     /**
@@ -772,7 +767,6 @@ class ArtCokiechoicespro extends Module
         ]);
 
         return $this->display(__FILE__, 'unsubscribe.tpl');
-
     }
 
     public function hookDisplayFooterBefore()
