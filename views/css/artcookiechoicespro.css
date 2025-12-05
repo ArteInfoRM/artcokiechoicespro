@@ -1,0 +1,108 @@
+@media (min-width:900px) {
+	#cookieChoiceInfo {
+		font-size:14px;
+		width: 100%;
+	}
+	#cookieChoiceInfo #InformativaAccetto,
+	#cookieChoiceInfo #InformativaReject {
+		font-size:14px;
+	}
+}
+@media (min-width:700px) and (max-width:899px){
+	#cookieChoiceInfo {
+		font-size:14px;
+
+	}
+	#cookieChoiceInfo #InformativaAccetto,
+	#cookieChoiceInfo #InformativaReject {
+		font-size:14px;
+		
+	}
+}
+@media (min-width:580px) and (max-width:699px){
+	#cookieChoiceInfo {
+		font-size:12px;
+		
+	}
+	#cookieChoiceInfo #InformativaAccetto,
+	#cookieChoiceInfo #InformativaReject {
+		font-size:12px
+		
+	}
+}
+@media (max-width:579px){
+	#cookieChoiceInfo {
+		font-size:12px;
+		
+	}
+	#cookieChoiceInfo #InformativaAccetto,
+	#cookieChoiceInfo #InformativaReject {
+		font-size:12px;
+	
+	}
+}
+
+#cookieChoiceInfo {
+	position:fixed;
+	margin:0; 
+	left:0; 
+	padding:20px;
+	z-index:9999;
+	color:#DDD;
+	text-align:center;
+}
+
+#cookieChoiceInfo #InformativaSpan {
+
+	max-width: 992px;
+	margin: 16px auto;
+	display:block;
+	text-align:left;
+}
+
+#cookieChoiceInfo #InformativaAccetto,
+#cookieChoiceInfo #InformativaReject {
+	-webkit-border-radius: 6;
+	-moz-border-radius: 6;
+	border-radius: 6px;
+	font-family: Arial;
+	padding: 10px 14px 10px 14px;
+	text-decoration: none;
+	display:inline;
+}
+
+#cookieChoiceInfo #InformativaAccetto:hover,
+#cookieChoiceInfo #InformativaReject:hover {
+	text-decoration: none;
+}
+
+.TabellaCookiePolicy .NomeCookie {
+	font-weight: bold;
+}
+
+.TabellaCookiePolicy th, .TabellaCookiePolicy td, .TabellaCookiePolicy {
+	border: 1px solid #bdbdbd;
+	padding: 6px;
+}
+
+.TabellaCookiePolicy th {
+	font-weight:bold;
+	font-size:16px;
+}
+
+.TabellaCookiePolicy .ThNomeCookie {
+	min-width:120px;
+}
+
+.TabellaCookiePolicy .LinkCookie {
+	text-align:center;
+}
+
+#cookieChoiceInfo #InformativaClick {
+	text-decoration: underline;
+	background:none;
+}
+
+
+	
+
