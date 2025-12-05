@@ -4,6 +4,9 @@ ArtCookieChoicesPro is a free PrestaShop module developed by **Tecnoacquisti.com
 
 The module is lightweight, fast, and does not rely on external libraries. It includes full integration with **Google Consent Mode v2** and **Microsoft UET Consent Mode**, ensuring compatibility with modern tracking requirements.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Built for PrestaShop](https://img.shields.io/badge/Built%20for-PrestaShop-DF0067?logo=prestashop&logoColor=white)
+
 ---
 
 ## 🚀 Features
@@ -75,8 +78,10 @@ Developers may further extend behavior by hooking into JavaScript events after u
 
 ## 📄 License
 
-This module is freely distributed by **Tecnoacquisti.com®**.  
-Commercial reuse or resale is not allowed without permission.
+This module is released under the MIT License.
+You may freely use, modify, and distribute the software—even for commercial purposes—as long as the original copyright notice and license text are preserved.
+
+See the included LICENSE file for full terms.git status
 
 ---
 
