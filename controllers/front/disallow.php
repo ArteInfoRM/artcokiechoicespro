@@ -16,43 +16,38 @@ if (!defined('_PS_VERSION_')) {
 
 class ArtcokiechoicesproDisallowModuleFrontController extends ModuleFrontController
 {
-    public function init() {
-        $this->page_name = 'Disallow Cookies';
-        parent::init();
-    }
-
     protected $valid_token = false;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->valid_token = md5(_COOKIE_KEY_ . $this->module->name) == Tools::getValue('token', '');
+        $this->valid_token = md5(_COOKIE_KEY_ . $this->module->name) === Tools::getValue('token', '');
 
         if ($this->valid_token) {
             $cookie_name = 'displayCookieConsent';
+            // Cancella il cookie a livello di root
             setcookie($cookie_name, '', time() - 3600, '/');
             unset($_COOKIE[$cookie_name]);
-            }
+        }
     }
 
+    public function init()
+    {
+        $this->page_name = 'Disallow Cookies';
+        parent::init();
+    }
 
     public function initContent()
     {
         parent::initContent();
 
-        $context = Context::getContext();
-
-        $context->smarty->assign([
+        // Usa il context del controller (compatibile da 1.7+)
+        $this->context->smarty->assign([
             'artcokiechoicespro_valid_token' => $this->valid_token,
         ]);
 
-        if (version_compare(_PS_VERSION_, '1.7.0', '<')) {
-            $this->setTemplate('disallow.tpl');
-        } else {
-            $this->setTemplate('module:artcokiechoicespro/views/templates/front/disallow-17.tpl');
-        }
+        // Da 1.7 in su usiamo solo il template in module:
+        $this->setTemplate('module:artcokiechoicespro/views/templates/front/disallow-17.tpl');
     }
-
-
 }

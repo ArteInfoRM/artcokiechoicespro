@@ -196,36 +196,28 @@ class ArtCokiechoicespro extends Module {
         $output .= $this->displayConfirmation($this->l('Basic settings updated'));
     }
 
-    $link = Context::getContext()->link->getModuleLink(
-        'artcokiechoicespro',
+    $link = $this->context->link->getModuleLink(
+        $this->name,
         'disallow',
         [
             'token' => md5(_COOKIE_KEY_ . $this->name),
-        ],
+            ],
         true
     );
 
-    $this->smarty->assign(array(
-        'link' =>  $link,
-        'shop_base_url' => $shop_base_url,
-    ));
+        $this->context->smarty->assign([
+            'link'          => $link,
+            'shop_base_url' => $shop_base_url,
+            'module_dir'    => $this->_path,
+            'active_1'        => $active_1,
+            'active_2'        => $active_2,
+            'basic_setting'   => $basic_setting . $output,
+            'advanced_setting'=> $advanced_setting . $outputadv,
+        ]);
 
     $this->context->smarty->assign('module_dir', $this->_path);
 
-
-        $tab = $this->display(__FILE__, 'views/templates/admin/allert.tpl');
-		$tab .= '<ul class="nav nav-tabs" role="tablist">
-		<li class="'.$active_1.'"><a href="#template_1" role="tab" data-toggle="tab">'.$this->l('Basic settings').'</a></li>
-		<li class="'.$active_2.'"><a href="#template_2" role="tab" data-toggle="tab">'.$this->l('Advanced setting').'</a></li>
-		<li><a href="#template_3" role="tab" data-toggle="tab">'.$this->l('Documentation').'</a></li>
-		</ul>';
-		
-		return $tab.'<!-- Tab panes -->
-		<div class="tab-content">
-		<div class="tab-pane '.$active_1.'" id="template_1">'.$basic_setting.''.$output.'</div>
-		<div class="tab-pane '.$active_2.'" id="template_2">'.$advanced_setting.''.$outputadv.'</div>
-		<div class="tab-pane" id="template_3">'.$this->display(__FILE__, 'views/templates/admin/documentation.tpl').'</div>
-		</div><p style="text-align: center;">'.$this->display(__FILE__, 'views/templates/admin/copyright.tpl').'<p>';
+    return $this->display(__FILE__, 'views/templates/admin/configure.tpl');
 	
 	}
 	
@@ -658,8 +650,15 @@ class ArtCokiechoicespro extends Module {
         if (!$lang) {
             $lang = $this->context->language->id;
         }
-        $id_shop = Context::getContext()->shop->id;
-        $cms_pages = CMS::getCMSPages($lang, null, null, $id_shop);
+        $id_shop = (int) $this->context->shop->id;
+
+        $cms_pages = CMS::getCMSPages(
+            (int) $lang,
+            null,
+            true,
+            $id_shop
+        );
+
         $cms_options = array();
         foreach ($cms_pages as $cms) {
             $option = array();
@@ -741,8 +740,8 @@ class ArtCokiechoicespro extends Module {
 	}
 
     public function showUnsubscribe() {
-        $link = Context::getContext()->link->getModuleLink(
-            'artcokiechoicespro',
+        $link = $this->context->link->getModuleLink(
+            $this->name,
             'disallow',
             [
                 'token' => md5(_COOKIE_KEY_ . $this->name),

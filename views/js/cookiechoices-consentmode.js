@@ -1,8 +1,12 @@
 /**
- * Variante di cookiechoices con integrazione Google Consent Mode v2
- * e Microsoft UET Consent Mode.
+ *  2009-2025 Tecnoacquisti.com
  *
- * Richiede che gtag/GTAG o dataLayer (per GTM) e/o UET siano già caricati.
+ *  For support feel free to contact us on our website at http://www.arteinformatica.eu
+ *
+ *  @author    Arte e Informatica <admin@arteinformatica.eu>
+ *  @copyright 2009-2025 Arte e Informatica
+ *  @license   One Paid Licence By WebSite Using This Module.
+ *             No Rent. No Sell. No Share.
  */
 
 (function (window) {
