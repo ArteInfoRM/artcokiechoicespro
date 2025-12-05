@@ -10,7 +10,6 @@
 *
 *  @version   1.5
 */
-
 if (!defined('_PS_VERSION_'))
 exit;
 
