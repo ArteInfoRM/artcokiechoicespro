@@ -548,8 +548,7 @@ class ArtCokiechoicespro extends Module
                         'lang' => true,
                         'autoload_rte' => true,
                         'desc' => $this->l('Text to privacy link'),
-
-                     ],
+                         ],
                      [
                         'type' => 'text',
                         'label' => $this->l('Buttom Reject Text'),
@@ -557,8 +556,7 @@ class ArtCokiechoicespro extends Module
                         'lang' => true,
                         'autoload_rte' => true,
                         'desc' => $this->l('Text buttom'),
-
-                     ],
+                         ],
                     [
                         'type' => 'text',
                         'label' => $this->l('Buttom Accept Text'),
@@ -566,9 +564,8 @@ class ArtCokiechoicespro extends Module
                         'lang' => true,
                         'autoload_rte' => true,
                         'desc' => $this->l('Text buttom'),
-
-                    ],
-                     [
+                        ],
+                    [
                         'type' => 'select',
                         'label' => $this->l('Select Privacy URL'),
                         'name' => Tools::strtoupper($this->name) . '_PRIVACY_CMS',
@@ -650,7 +647,6 @@ class ArtCokiechoicespro extends Module
             'ARTCOKIECHOICESPRO_BUTTUMTXT' => Tools::getValue('ARTCOKIECHOICESPRO_BUTTUMTXT', $artcookies_buttomtxt),
             'ARTCOKIECHOICESPRO_REJECT' => Tools::getValue('ARTCOKIECHOICESPRO_REJECT', $artcookies_reject),
         ];
-
     }
 
     public function getCmsLinks($lang = null)
@@ -712,7 +708,6 @@ class ArtCokiechoicespro extends Module
             'art_consentmode' => (int) $art_consentmode,
             'art_privacy_text_link' => $art_privacy_text_link,
             'art_reject_button_txt' => $art_reject_button_txt,
-
             ]);
 
         return $this->display(__FILE__, 'artcookiechoices.tpl');
@@ -720,10 +715,9 @@ class ArtCokiechoicespro extends Module
 
     public function hookHeader($params)
     {
-
         if ($this->active) {
             $this->context->controller->addCSS($this->_path . '/views/css/artcookiechoicespro.css', 'all');
-            }
+        }
 
         $arturi = Tools::getHttpHost(true) . __PS_BASE_URI__;
         $artcookies_bcolor = Configuration::get(Tools::strtoupper($this->name . '_BANNER_COLOR'));
@@ -736,7 +730,6 @@ class ArtCokiechoicespro extends Module
         $artcookies_position = Configuration::get(Tools::strtoupper($this->name . '_POSITION'));
 
         $this->smarty->assign([
-
             'artcookies_bcolor' => $artcookies_bcolor,
             'artcookies_shadow' => $artcookies_shadow,
             'artcookies_cshadow' => $artcookies_cshadow,
