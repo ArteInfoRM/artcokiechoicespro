@@ -763,6 +763,7 @@ class ArtCokiechoicespro extends Module {
         if ($position == 1) {
             $out .= $this->showUnsubscribe();
         }
+
         return $out;
     }
 
@@ -795,6 +796,7 @@ class ArtCokiechoicespro extends Module {
         if ($position == 4) {
             $out .=  $this->showUnsubscribe();
         }
+
         return $out;
     }
 }
