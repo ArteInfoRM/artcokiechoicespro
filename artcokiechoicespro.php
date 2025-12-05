@@ -13,8 +13,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class ArtCokiechoicespro extends Module {
-    public function __construct() {
+class ArtCokiechoicespro extends Module
+{
+    public function __construct()
+    {
         $this->name = 'artcokiechoicespro';
         $this->tab = 'front_office_features';
         $this->version = '1.5.4';
@@ -29,10 +31,10 @@ class ArtCokiechoicespro extends Module {
         $this->description = $this->l('Free Cookie Tool: simple PrestaShop module that displays the EU Cookie Law banner based on Google\'s Cookiechoices.org. Updated to new 2022 rules.');
 
         $this->ps_versions_compliancy = ['min' => '1.6', 'max' => _PS_VERSION_];
-
     }
 
-    public function install() {
+    public function install()
+    {
         $languages = Language::getLanguages(false);
         $artcookies_text = [];
         $artcookies_url = [];
@@ -52,36 +54,35 @@ class ArtCokiechoicespro extends Module {
 
        $this->_clearCache('artcookiechoices.tpl');
 
-       return parent::install() &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_ACTIVE', '1') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_CONSENTMODE', '0') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_EXTACTIVE', '0') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_PRIVACY_CMS', '0') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_BANNER_COLOR', '#000000') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_TEXT_COLOR', '#ffffff') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_SHADOW', '1') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_SHADOW_COLOR', '#000000') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_BUTTON_COLOR', '#f77002') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_BTEXT_COLOR', '#ffffff') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_TEXT', $artcookies_text) &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_PRIVACY_EXT', $artcookies_url) &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_LINKTXT', $artcookies_linktxt) &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_BUTTUMTXT', $artcookies_buttomtxt) &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_REJECT', $artcookies_reject) &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_TARGET', '_self') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_LOADKJS', '0') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_POSITION', 'bottom') &&
-           Configuration::updateValue(Tools::strtoupper($this->name) . '_REVOKE', '0') &&
-           //$this->registerHook('footer') &&
-           //$this->registerHook('top') &&
-           $this->registerHook('header') &&
-           $this->registerHook('CookiesDisable') &&
-           $this->registerHook('displayFooterBefore') &&
-           $this->registerHook('displayFooter') &&
-           $this->registerHook('displayFooterAfter');
+        return parent::install()
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_ACTIVE', '1')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_CONSENTMODE', '0')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_EXTACTIVE', '0')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_PRIVACY_CMS', '0')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_BANNER_COLOR', '#000000')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_TEXT_COLOR', '#ffffff')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_SHADOW', '1')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_SHADOW_COLOR', '#000000')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_BUTTON_COLOR', '#f77002')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_BTEXT_COLOR', '#ffffff')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_TEXT', $artcookies_text)
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_PRIVACY_EXT', $artcookies_url)
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_LINKTXT', $artcookies_linktxt)
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_BUTTUMTXT', $artcookies_buttomtxt)
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_REJECT', $artcookies_reject)
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_TARGET', '_self')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_LOADKJS', '0')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_POSITION', 'bottom')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_REVOKE', '0')
+            && $this->registerHook('header')
+            && $this->registerHook('CookiesDisable')
+            && $this->registerHook('displayFooterBefore')
+            && $this->registerHook('displayFooter')
+            && $this->registerHook('displayFooterAfter');
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_ACTIVE');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_CONSENTMODE');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_EXTACTIVE');
@@ -307,8 +308,8 @@ class ArtCokiechoicespro extends Module {
 
                         'options' => [
                             'query' => [
-                                 ['id' => 'top', 'name' => $this->l("top")],
-                                 ['id' => 'bottom', 'name' => $this->l("bottom")],
+                                 ['id' => 'top', 'name' => $this->l('top')],
+                                 ['id' => 'bottom', 'name' => $this->l('bottom')],
                                 ],
                             'id' => 'id',
                             'name' => 'name',
@@ -576,10 +577,10 @@ class ArtCokiechoicespro extends Module {
                         'desc' => $this->l('The target attribute specifies where to open the linked document'),
                         'options' => [
                             'query' => [
-                                 ['id' => '_self', 'name' => $this->l("_self: opens the linked document in the same frame as it was clicked (this is default)")],
-                                 ['id' => '_blank', 'name' => $this->l("_blank: opens the linked document in a new window or tab")],
-                                 ['id' => '_parent', 'name' => $this->l("_parent: opens the linked document in the parent frame")],
-                                 ['id' => '_top', 'name' => $this->l("_top: opens the linked document in the full body of the window")],
+                                 ['id' => '_self', 'name' => $this->l('_self: opens the linked document in the same frame as it was clicked (this is default)')],
+                                 ['id' => '_blank', 'name' => $this->l('_blank: opens the linked document in a new window or tab')],
+                                 ['id' => '_parent', 'name' => $this->l('_parent: opens the linked document in the parent frame')],
+                                 ['id' => '_top', 'name' => $this->l('_top: opens the linked document in the full body of the window')],
                                  ],
                             'id' => 'id',
                             'name' => 'name',
@@ -592,11 +593,11 @@ class ArtCokiechoicespro extends Module {
                         'desc' => $this->l('Position of the link for cancel the consent'),
                         'options' => [
                             'query' => [
-                                ['id' => '0', 'name' => $this->l("Select")],
-                                ['id' => '1', 'name' => $this->l("displayFooterBefore")],
-                                ['id' => '2', 'name' => $this->l("displayFooter")],
-                                ['id' => '3', 'name' => $this->l("displayFooterAfter")],
-                                ['id' => '4', 'name' => $this->l("CookiesDisable")],
+                                ['id' => '0', 'name' => $this->l('Select')],
+                                ['id' => '1', 'name' => $this->l('displayFooterBefore')],
+                                ['id' => '2', 'name' => $this->l('displayFooter')],
+                                ['id' => '3', 'name' => $this->l('displayFooterAfter')],
+                                ['id' => '4', 'name' => $this->l('CookiesDisable')],
                             ],
                             'id' => 'id',
                             'name' => 'name',
@@ -666,7 +667,10 @@ class ArtCokiechoicespro extends Module {
             $cms_options[] = $option;
         }
 
-        $cms_options[] = ["name" => $this->l("Select CMS"), "id" => 0 ];
+        $cms_options[] = [
+            'name' => $this->l('Select CMS'),
+            'id'   => 0,
+        ];
 
         return $cms_options;
     }
@@ -738,7 +742,8 @@ class ArtCokiechoicespro extends Module {
         return $this->display(__FILE__, 'artcookiesheader.tpl');
     }
 
-    public function showUnsubscribe() {
+    public function showUnsubscribe()
+    {
         $link = $this->context->link->getModuleLink(
             $this->name,
             'disallow',
@@ -756,7 +761,8 @@ class ArtCokiechoicespro extends Module {
 
     }
 
-    public function hookDisplayFooterBefore() {
+    public function hookDisplayFooterBefore()
+    {
         $out = '';
         $position = Configuration::get(Tools::strtoupper($this->name . '_REVOKE'));
 
@@ -767,7 +773,8 @@ class ArtCokiechoicespro extends Module {
         return $out;
     }
 
-    public function hookDisplayFooter() {
+    public function hookDisplayFooter()
+    {
         $out = '';
         $position = Configuration::get(Tools::strtoupper($this->name . '_REVOKE'));
         $out .= $this->cookiesBar();
@@ -779,7 +786,8 @@ class ArtCokiechoicespro extends Module {
         return $out;
     }
 
-    public function hookDisplayFooterAfter() {
+    public function hookDisplayFooterAfter()
+    {
         $out = '';
         $position = Configuration::get(Tools::strtoupper($this->name . '_REVOKE'));
 
@@ -789,7 +797,8 @@ class ArtCokiechoicespro extends Module {
         return $out;
     }
 
-    public function hookCookiesDisable() {
+    public function hookCookiesDisable()
+    {
         $out = '';
         $position = Configuration::get(Tools::strtoupper($this->name . '_REVOKE'));
 
