@@ -19,7 +19,7 @@ class ArtCokiechoicespro extends Module
     {
         $this->name = 'artcokiechoicespro';
         $this->tab = 'front_office_features';
-        $this->version = '1.5.4';
+        $this->version = '1.5.5';
         $this->author = 'Tecnoacquisti.com';
         $this->need_instance = 0;
 

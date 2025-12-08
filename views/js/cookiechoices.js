@@ -9,7 +9,7 @@
  *             No Rent. No Sell. No Share.
  */
 
-(function(window) {
+(function (window) {
 
   if (!!window.cookieChoices) {
     return window.cookieChoices;
@@ -20,7 +20,7 @@
   // IE8 does not support textContent, so we should fallback to innerText.
   var supportsTextContent = 'textContent' in document.body;
 
-  var cookieChoices = (function() {
+  var cookieChoices = (function () {
 
     var cookieName = 'displayCookieConsent';
     var cookieConsentId = 'cookieChoiceInfo';
@@ -36,7 +36,7 @@
       cookieConsentElement.style.cssText = butterBarStyles;
 
       var closeButtonContainer = document.createElement('span');
-      closeButtonContainer.id = 'close_cookie_block';
+      closeButtonContainer.id = closeCookieBlock;
       closeButtonContainer.style.cssText = 'float: right;cursor: pointer;';
 
       var closeButtonIcon = document.createElement('i');
@@ -59,13 +59,13 @@
     }
 
     function _createDialogElement(cookieText, acceptText, linkText, linkHref, linkTarget) {
-		
+
       var glassStyle = 'position:fixed;width:100%;height:100%;z-index:9999;' +
-          'bottom:0;left:0;opacity:0.5;filter:alpha(opacity=50);' +
-          'background-color:#ccc;';
+        'bottom:0;left:0;opacity:0.5;filter:alpha(opacity=50);' +
+        'background-color:#ccc;';
       var dialogStyle = 'z-index:10000;position:fixed;left:50%;top:50%';
       var contentStyle = 'position:relative;left:-50%;margin-top:-25%;' +
-          'background-color:#fff;padding:20px;box-shadow:4px 4px 25px #888;';
+        'background-color:#fff;padding:20px;box-shadow:4px 4px 25px #888;';
 
       var cookieConsentElement = document.createElement('div');
       cookieConsentElement.id = cookieConsentId;
@@ -113,7 +113,7 @@
     function _createAcceptLink(acceptText) {
       var acceptLink = document.createElement('a');
       _setElementText(acceptLink, acceptText);
-      acceptLink.id = 'InformativaAccetto';
+      acceptLink.id = acceptLinkId;
       acceptLink.href = '#';
       acceptLink.style.marginLeft = '24px';
       return acceptLink;
@@ -122,7 +122,7 @@
     function _createRejectLink(rejectText) {
       var rejectLink = document.createElement('a');
       _setElementText(rejectLink, rejectText);
-      rejectLink.id = 'InformativaReject';
+      rejectLink.id = rejectLinkId;
       rejectLink.href = '#';
       rejectLink.style.marginLeft = '24px';
       return rejectLink;
@@ -154,16 +154,13 @@
       if (_shouldDisplayConsent()) {
         _removeCookieConsent();
         var consentElement = (isDialog) ?
-            _createDialogElement(cookieText, acceptText, linkText, linkHref, linkTarget) :
-            _createHeaderElement(cookieText, acceptText, linkText, linkHref, linkTarget, rejectText);
+          _createDialogElement(cookieText, acceptText, linkText, linkHref, linkTarget) :
+          _createHeaderElement(cookieText, acceptText, linkText, linkHref, linkTarget, rejectText);
 
         var fragment = document.createDocumentFragment();
         fragment.appendChild(consentElement);
         document.body.appendChild(fragment.cloneNode(true));
-
-        document.getElementById(acceptLinkId).onclick = _acceptLinkClick;
-        document.getElementById(rejectLinkId).onclick = _rejectLinkClick;
-        document.getElementById(closeCookieBlock).onclick = _rejectLinkClick;
+        // Nessun binding diretto: i click sono gestiti via event delegation globale
       }
     }
 
@@ -186,13 +183,46 @@
       // Set the cookie expiry to one year after today.
       var expiryDate = new Date();
       expiryDate.setFullYear(expiryDate.getFullYear() + 1);
-      document.cookie = cookieName + '='+preference+'; expires=' + expiryDate.toGMTString() + ('; path=/');
+      document.cookie = cookieName + '=' + preference + '; expires=' + expiryDate.toGMTString() + '; path=/';
     }
 
     function _shouldDisplayConsent() {
       // Display the header only if the cookie has not been set.
       return !document.cookie.match(new RegExp(cookieName + '=([^;]+)'));
     }
+
+    /**
+     * Event delegation globale: intercetta i click sui pulsanti del banner
+     * anche se altri script manipolano il DOM o gli handler inline.
+     */
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+      if (!target) {
+        return;
+      }
+
+      // Click su "Accept"
+      if (target.id === acceptLinkId) {
+        event.preventDefault();
+        _acceptLinkClick();
+        return;
+      }
+
+      // Click su "Reject"
+      if (target.id === rejectLinkId) {
+        event.preventDefault();
+        _rejectLinkClick();
+        return;
+      }
+
+      // Click sulla X di chiusura (o sul suo contenuto interno)
+      if (target.id === closeCookieBlock ||
+        (typeof target.closest === 'function' && target.closest('#' + closeCookieBlock))) {
+        event.preventDefault();
+        _rejectLinkClick();
+        return;
+      }
+    });
 
     var exports = {};
     exports.showCookieConsentBar = showCookieConsentBar;

@@ -29,7 +29,7 @@
     var closeCookieBlock = "close_cookie_block";
 
     /**
-     * Helpers
+     * Helpers DOM
      */
 
     function _setElementText(element, text) {
@@ -169,7 +169,7 @@
       var match = document.cookie.match(
         new RegExp(cookieName + "=([^;]+)")
       );
-      return match ? match[1] : null; // 'y', 'n' o null
+      return match ? match[1] : null; // 'y', 'n' oppure null
     }
 
     function _shouldDisplayConsent() {
@@ -179,7 +179,6 @@
 
     /**
      * Google Consent Mode v2
-     * Usa gtag se disponibile, altrimenti dataLayer.push().
      */
 
     function _googleConsentDefault(state) {
@@ -189,16 +188,15 @@
           ad_storage: state,
           analytics_storage: state,
           ad_user_data: state,
-          ad_personalization: state,
+          ad_personalization: state
         });
       } else if (window.dataLayer && Array.isArray(window.dataLayer)) {
-        // Fallback per GTM: consenti di leggere lo stato con un trigger
         window.dataLayer.push({
           event: "default_consent",
           ad_storage: state,
           analytics_storage: state,
           ad_user_data: state,
-          ad_personalization: state,
+          ad_personalization: state
         });
       }
     }
@@ -210,7 +208,7 @@
           ad_storage: state,
           analytics_storage: state,
           ad_user_data: state,
-          ad_personalization: state,
+          ad_personalization: state
         });
       } else if (window.dataLayer && Array.isArray(window.dataLayer)) {
         window.dataLayer.push({
@@ -218,14 +216,13 @@
           ad_storage: state,
           analytics_storage: state,
           ad_user_data: state,
-          ad_personalization: state,
+          ad_personalization: state
         });
       }
     }
 
     /**
      * Microsoft UET Consent Mode
-     * Usa window.uetq se presente.
      */
 
     function _msConsentDefault(state) {
@@ -234,7 +231,7 @@
         return;
       }
       window.uetq.push("consent", "default", {
-        ad_storage: state,
+        ad_storage: state
       });
     }
 
@@ -244,19 +241,14 @@
         return;
       }
       window.uetq.push("consent", "update", {
-        ad_storage: state,
+        ad_storage: state
       });
     }
 
     /**
-     * Applica il default di Consent Mode in base al cookie esistente.
-     * - Primo accesso (nessun cookie): default = denied
-     * - Visite successive:
-     *    'y' => default granted
-     *    'n' => default denied
-     *
-     * NB: questo è un approccio "basic consent mode".
+     * Default iniziale in base al cookie
      */
+
     function _applyInitialConsentFromCookie() {
       var pref = _getStoredPreference();
       var state = "denied";
@@ -272,19 +264,15 @@
     }
 
     /**
-     * Salva la preferenza utente su cookie e manda l'update
-     * ai motori di consent (Google + Microsoft).
-     *
-     * preference: 'y' (accetto) | 'n' (rifiuto)
+     * Salvataggio preferenza + update Consent Mode
      */
+
     function _saveUserPreference(preference) {
       var state = preference === "y" ? "granted" : "denied";
 
-      // Aggiorna Google + Microsoft
       _googleConsentUpdate(state);
       _msConsentUpdate(state);
 
-      // Persistenza locale a 1 anno
       var expiryDate = new Date();
       expiryDate.setFullYear(expiryDate.getFullYear() + 1);
       document.cookie =
@@ -297,7 +285,7 @@
     }
 
     /**
-     * Event handlers per i pulsanti del banner
+     * Event handlers interni
      */
 
     function _acceptLinkClick() {
@@ -313,7 +301,7 @@
     }
 
     /**
-     * Funzioni pubbliche per mostrare il banner
+     * Costruzione e visualizzazione banner
      */
 
     function _showCookieConsent(
@@ -327,6 +315,7 @@
     ) {
       if (_shouldDisplayConsent()) {
         _removeCookieConsent();
+
         var consentElement = isDialog
           ? _createDialogElement(
             cookieText,
@@ -347,13 +336,7 @@
         var fragment = document.createDocumentFragment();
         fragment.appendChild(consentElement);
         document.body.appendChild(fragment.cloneNode(true));
-
-        document.getElementById(acceptLinkId).onclick = _acceptLinkClick;
-        document.getElementById(rejectLinkId).onclick = _rejectLinkClick;
-        var closeBtn = document.getElementById(closeCookieBlock);
-        if (closeBtn) {
-          closeBtn.onclick = _rejectLinkClick;
-        }
+        // Nessun binding diretto: i click sono gestiti via event delegation globale
       }
     }
 
@@ -396,15 +379,48 @@
     }
 
     /**
-     * Init immediato: imposta il default di Consent Mode
-     * PRIMA che gli script analitici/adv inizino a fare richieste.
-     *
-     * (Idealmente questo file va caricato in <head>, prima di gtag/GTAG/UET,
-     * oppure aggiungi un frammento minimo inline nel template header, vedi note sotto.)
+     * Event delegation globale per i pulsanti del banner
+     * (robusto contro rimaneggiamenti del DOM e sovrascritture di onclick)
+     */
+
+    document.addEventListener("click", function (event) {
+      var target = event.target;
+      if (!target) {
+        return;
+      }
+
+      // Click su "Accept"
+      if (target.id === acceptLinkId) {
+        event.preventDefault();
+        _acceptLinkClick();
+        return;
+      }
+
+      // Click su "Reject"
+      if (target.id === rejectLinkId) {
+        event.preventDefault();
+        _rejectLinkClick();
+        return;
+      }
+
+      // Click sulla X di chiusura (o un elemento interno alla X)
+      if (
+        target.id === closeCookieBlock ||
+        (typeof target.closest === "function" &&
+          target.closest("#" + closeCookieBlock))
+      ) {
+        event.preventDefault();
+        _rejectLinkClick();
+        return;
+      }
+    });
+
+    /**
+     * Init immediato: applica il default Consent Mode
      */
     _applyInitialConsentFromCookie();
 
-    // API esposta (stessa dell’originale)
+    // API esposta (come nella versione base)
     var exports = {};
     exports.showCookieConsentBar = showCookieConsentBar;
     exports.showCookieConsentDialog = showCookieConsentDialog;

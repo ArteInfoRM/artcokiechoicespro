@@ -42,12 +42,12 @@ class ArtcokiechoicesproDisallowModuleFrontController extends ModuleFrontControl
     {
         parent::initContent();
 
-        // Usa il context del controller (compatibile da 1.7+)
         $this->context->smarty->assign([
             'artcokiechoicespro_valid_token' => $this->valid_token,
+            'artcokiechoicespro_home_url'    => $this->context->link->getPageLink('index', true),
         ]);
 
-        // Da 1.7 in su usiamo solo il template in module:
         $this->setTemplate('module:artcokiechoicespro/views/templates/front/disallow-17.tpl');
     }
 }
+

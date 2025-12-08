@@ -3,7 +3,29 @@ All notable changes to this project are documented below.
 
 ---
 
-## [1.5.4] – 2025-01-XX
+## [1.5.5] – 2025-02-08
+### Added
+- New disallow page with user feedback message and automatic redirect to the homepage.
+- Added redirect button for improved UX when resetting cookie preferences.
+- Added dedicated template `disallow-17.tpl` for consent-reset handling.
+- Added new translations: **ES**, **FR**, **DE**, **PL**.
+- Updated translations: **IT** and **EN**.
+
+### Improved
+- Refactored disallow controller for full compatibility with **PrestaShop 1.7, 8, and 9**.
+- Removed obsolete configuration option `ARTCOKIECHOICESPRO_DISABLE` and legacy unused code.
+- Improved JavaScript event handling for Accept, Reject and Close actions in both Standard Mode and Consent Mode v2.
+- Enhanced DOM injection logic for better compatibility across themes and demo environments.
+- Improved separation between controller logic and templates.
+
+### Fixed
+- Fixed missing click event bindings causing Accept/Reject buttons to fail on some installations.
+- Fixed empty output on consent-reset page due to missing template rendering.
+- Fixed multiple PrestaShop Validator warnings (Context usage, nofilter removal, escaping rules).
+
+---
+
+## [1.5.4] – 2025-01-02
 ### Added
 - Full compatibility with **PrestaShop 9**.
 - Integration of **Google Consent Mode v2**.

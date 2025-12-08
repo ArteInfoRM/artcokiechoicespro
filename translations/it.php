@@ -1,19 +1,18 @@
 <?php
 
 global $_MODULE;
-$_MODULE = [];
+$_MODULE = array();
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c9ef2e832a342d03834041c7744d87ff'] = 'PrestaShop Banner Cookiechoices (Eu Cookie Law) GDPR';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c1f78468b2319d5de7edf13009b00e8f'] = 'Free Cookie Tool: semplice modulo per PrestaShop che visualizza il banner EU Cookie Law basato su Cookiechoices.org di Google. Aggiornato alle nuove disposizioni del Garante della Privacy del 2022.';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_0266804ebcf8ecfb01f418fac76a7ada'] = 'Salvataggio paramenti avanzati effettuato';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_9ba3dddbd2de396e3557e386d8685cc8'] = 'Salvataggio parametri base effettuato';
-$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_93d74901738e996378295fb0a59bb977'] = 'Configurazione base';
-$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_f895a90eb72b92cf0c9232cb46861f04'] = 'Configurazione avanzata';
-$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_5b6cf869265c13af8566f192b4ab3d2a'] = 'Documentazione';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_172a15a27c0a30feb812e652e3dae43d'] = 'Colore sfondo';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_98bd12b021b42b476dc79125d2e634d6'] = 'Imposta il colore del banner cookie';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_3749c7343d912a50307df6ac9fbf22cb'] = 'Colore testo';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_f28da8fd35d7ee724c294234df921887'] = 'Il colore del testo nel banner cookies';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_5ad47997df22c6aa28892e64686e9196'] = 'Posizione del banner';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_b28354b543375bfa94dabaeda722927f'] = 'top';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_71f262d796bed1ab30e8a2d5a8ddee6f'] = 'bottom';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_b467795882ef6efaf4c507664e9249c9'] = 'Carica jQuery';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_b1653bf3e946ef9579074f93c7979b8c'] = 'Se il tuo tema non utilizza le librerie JQuery';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Abilita';
@@ -37,6 +36,8 @@ $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_8e242fcd9a619d84c80
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_07db26d2c2e082e84e75b1e69c41ac9e'] = 'Attiva il Banner Cookies';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_65c662eaf11cba1a62c81c4b85b3e9f1'] = 'Mostra il banner cookies ai tuoi visitatori';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_2d445ec5722a04e579faf2081b6c74af'] = 'Attiva la modalità di consenso';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_5e3d16e1778b7703dc3305d3bdd63a35'] = 'Abilita la modalità di consenso di Google e Microsoft (Consent Mode v2)';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_35ee58c7ea226b4d7b28a76dc51fb808'] = 'Testo banner';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_6adc0d7fafef0fb86c96dcc55a2b2d03'] = 'Testo legale da mostrare nel banner';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_8b26ba750abc9d97b5e16581c06b8c96'] = 'Testo link informativa';
@@ -48,10 +49,29 @@ $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_5f3e1cffb11f06cab65
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_5713862b4b6b86423ba290b57b87a224'] = 'Seleziona la pagina CMS contenente l\'informativa Cookies';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_90258b83be164efd57c5d7676692a099'] = 'Modalità di apertura del link';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_d7130b17d1ebfa5bc1e2fe6a508b8f71'] = 'Specifica l\'attributo target per l\'apertura dell\'informativa';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_44570921c469eabe505c517e2166fcec'] = ' _self: apre il documento collegato nello stesso frame in cui è stato cliccato (impostazione predefinita)';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_3ff3e92ff6bff01352e1567a8d42717f'] = '_blank: apre il documento collegato in una nuova finestra o scheda';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_ca5aad49069ced35982d02efbec668d1'] = '_parent: apre il documento collegato nel frame padre';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_297c78ffee0109ac81736cbd2472a82d'] = '_top: apre il documento collegato nell\'intero corpo della finestra';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_a738c3768f55022b5b796cb77176a348'] = 'Link Revoca';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_77d8690a35080004b92540557e808c3a'] = 'Link per revocare il consenso e aggiornare le impostazioni';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_e0626222614bdee31951d84c64e5e9ff'] = 'Seleziona';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c20a47f38749c593c793415a39cd0e9b'] = 'displayFooterBefore';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_ce323f37858ed801eb4e7914f33b041d'] = 'displayFooter';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_7bf7dfcfc21804d0b430128cfacf3f9c'] = 'displayFooterAfter';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_dad7a0de81e5b12a47a74e52f9c1eb23'] = 'CookiesDisable';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_a1d42a33fb4d9c511eccd227ea73189a'] = 'Seleziona CMS ';
+$_MODULE['<{artcokiechoicespro}prestashop>unsubscribe_6b4b410f49d935eeff56ace5666bc547'] = 'Aggiorna le preferenze dei Cookies';
+$_MODULE['<{artcokiechoicespro}prestashop>disallow-17_9b77a31e40f0b9293a12befa02a5701c'] = 'Preferenze sui cookie aggiornate';
+$_MODULE['<{artcokiechoicespro}prestashop>disallow-17_ea988d2da73920759f2aca8ea4056d63'] = 'Le tue preferenze sui cookie sono state reimpostate. Verrai reindirizzato alla home page tra pochi secondi.';
+$_MODULE['<{artcokiechoicespro}prestashop>disallow-17_446b416d535ed3f547fcd653dc11d49c'] = 'Richiesta non valida';
+$_MODULE['<{artcokiechoicespro}prestashop>disallow-17_c1ddddfc6baec8050c1f5832a84e333b'] = 'Il token di sicurezza non è valido o è scaduto. Verrai reindirizzato alla home page tra pochi secondi.';
+$_MODULE['<{artcokiechoicespro}prestashop>disallow-17_a922fff6646b0eb4db05fe6e0894af7d'] = 'Torna alla Home';
 $_MODULE['<{artcokiechoicespro}prestashop>allert_c9ef2e832a342d03834041c7744d87ff'] = ' PrestaShop Banner Cookiechoices (Eu Cookie Law) GDPR';
 $_MODULE['<{artcokiechoicespro}prestashop>allert_e7598d60abc28a96f198963e6b410b47'] = 'Questo modulo è pensato per assistere gli utenti nel processo di adeguamento ai regolamenti europei. La semplice installazione non garantisce in nessun caso la conformità dei siti ai nuovi obblighi imposti dal GDRP e relative normative.';
+$_MODULE['<{artcokiechoicespro}prestashop>configure_93d74901738e996378295fb0a59bb977'] = 'Impostazioni di base';
+$_MODULE['<{artcokiechoicespro}prestashop>configure_f895a90eb72b92cf0c9232cb46861f04'] = 'Impostazioni avanzate';
+$_MODULE['<{artcokiechoicespro}prestashop>configure_5b6cf869265c13af8566f192b4ab3d2a'] = 'Documentazione';
 $_MODULE['<{artcokiechoicespro}prestashop>copyright_948a2e3548aaf7f9941a3192fa607d51'] = 'Credits';
 $_MODULE['<{artcokiechoicespro}prestashop>copyright_f32af624cf9b69880166c492757ea91c'] = 'Moduli PrestaShop';
 $_MODULE['<{artcokiechoicespro}prestashop>copyright_bb0753bfcd40d437efac5cad0b16eee4'] = 'Forniamo soluzioni personalizzate per aiutarti a sviluppare la tua attività online';
@@ -69,4 +89,3 @@ $_MODULE['<{artcokiechoicespro}prestashop>documentation_0feeb0df161d95b958cc3732
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_4c7d5d7dfde4a7bd82b54348182043d3'] = 'Altre risorse';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_2eb9d91eca6bf8f6431108fc1642d88b'] = 'Il nostro profilo su PrestaShop Addons';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_8f11b46f95d3231abaaf6429076cf5fe'] = 'Scopri i nostri moduli e servizi';
-$_MODULE['<{artcokiechoicespro}prestashop>unsubscribe_6b4b410f49d935eeff56ace5666bc547'] = 'Aggiorna le preferenze dei Cookies';
