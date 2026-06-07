@@ -7,7 +7,7 @@
  *  @author    Arte e Informatica <shop@tecnoacquisti.com>
  *  @copyright 2009-2025 Arte e Informatica
  *  @license   One Paid Licence By WebSite Using This Module. No Rent. No Sell. No Share.
- *  @version   1.2.2
+ *  @version   1.6.0
  */
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -19,7 +19,7 @@ class ArtCokiechoicespro extends Module
     {
         $this->name = 'artcokiechoicespro';
         $this->tab = 'front_office_features';
-        $this->version = '1.5.5';
+        $this->version = '1.6.0';
         $this->author = 'Tecnoacquisti.com';
         $this->need_instance = 0;
 
@@ -30,7 +30,7 @@ class ArtCokiechoicespro extends Module
         $this->displayName = $this->l('PrestaShop Banner Cookiechoices (Eu Cookie Law) GDPR');
         $this->description = $this->l('Free Cookie Tool: simple PrestaShop module that displays the EU Cookie Law banner based on Google\'s Cookiechoices.org. Updated to new 2022 rules.');
 
-        $this->ps_versions_compliancy = ['min' => '1.6', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '1.7.8.0', 'max' => _PS_VERSION_];
     }
 
     public function install()
@@ -41,6 +41,11 @@ class ArtCokiechoicespro extends Module
         $artcookies_linktxt = [];
         $artcookies_buttomtxt = [];
         $artcookies_reject = [];
+        $artcookies_customize = [];
+        $artcookies_save_preferences = [];
+        $category_defaults = $this->getDefaultCookieCategoryTexts();
+        $category_labels = [];
+        $category_descriptions = [];
 
         foreach ($languages as $lang) {
             $artcookies_text[$lang['id_lang']] = pSQL(
@@ -50,6 +55,13 @@ class ArtCokiechoicespro extends Module
             $artcookies_linktxt[$lang['id_lang']] = pSQL('Read the Privacy Policy');
             $artcookies_buttomtxt[$lang['id_lang']] = pSQL('Accept');
             $artcookies_reject[$lang['id_lang']] = pSQL('Reject');
+            $artcookies_customize[$lang['id_lang']] = pSQL('Customize');
+            $artcookies_save_preferences[$lang['id_lang']] = pSQL('Save preferences');
+
+            foreach ($category_defaults as $category_key => $category_default) {
+                $category_labels[$category_key][$lang['id_lang']] = pSQL($category_default['label']);
+                $category_descriptions[$category_key][$lang['id_lang']] = pSQL($category_default['description']);
+            }
         }
 
         $this->_clearCache('artcookiechoices.tpl');
@@ -70,10 +82,13 @@ class ArtCokiechoicespro extends Module
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_LINKTXT', $artcookies_linktxt)
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_BUTTUMTXT', $artcookies_buttomtxt)
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_REJECT', $artcookies_reject)
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_CUSTOMIZE', $artcookies_customize)
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_SAVE_PREFS', $artcookies_save_preferences)
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_TARGET', '_self')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_LOADKJS', '0')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_POSITION', 'bottom')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_REVOKE', '0')
+            && $this->installCookieCategoryConfiguration($category_labels, $category_descriptions)
             && $this->registerHook('header')
             && $this->registerHook('CookiesDisable')
             && $this->registerHook('displayFooterBefore')
@@ -98,12 +113,15 @@ class ArtCokiechoicespro extends Module
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_LINKTXT');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_BUTTUMTXT');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_REJECT');
+        Configuration::deleteByName(Tools::strtoupper($this->name) . '_CUSTOMIZE');
+        Configuration::deleteByName(Tools::strtoupper($this->name) . '_SAVE_PREFS');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_TARGET');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_LOADKJS');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_COMPRESS');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_POSITION');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_DISABLE');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_REVOKE');
+        $this->deleteCookieCategoryConfiguration();
 
         return parent::uninstall();
     }
@@ -141,6 +159,10 @@ class ArtCokiechoicespro extends Module
             $artcookies_position = Tools::getValue('ARTCOKIECHOICESPRO_POSITION');
             $artcookies_disable = Tools::getValue('ARTCOKIECHOICESPRO_DISABLE');
 
+            if (!in_array($artcookies_position, ['top', 'bottom', 'center'], true)) {
+                $artcookies_position = 'bottom';
+            }
+
             foreach ($languages as $lang) {
                 $artcookies_url[$lang['id_lang']] = pSQL(
                     Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_EXT_' . $lang['id_lang'])
@@ -172,6 +194,8 @@ class ArtCokiechoicespro extends Module
             $artcookies_linktxt = [];
             $artcookies_buttomtxt = [];
             $artcookies_reject = [];
+            $artcookies_customize = [];
+            $artcookies_save_preferences = [];
             $languages = Language::getLanguages(false);
             $artcookies_active = Tools::getValue('ARTCOKIECHOICESPRO_ACTIVE');
             $artcookies_consentmode = Tools::getValue('ARTCOKIECHOICESPRO_CONSENTMODE');
@@ -192,17 +216,26 @@ class ArtCokiechoicespro extends Module
                 $artcookies_reject[$lang['id_lang']] = urldecode(
                     Tools::getValue('ARTCOKIECHOICESPRO_REJECT_' . $lang['id_lang'])
                 );
+                $artcookies_customize[$lang['id_lang']] = urldecode(
+                    Tools::getValue('ARTCOKIECHOICESPRO_CUSTOMIZE_' . $lang['id_lang'])
+                );
+                $artcookies_save_preferences[$lang['id_lang']] = urldecode(
+                    Tools::getValue('ARTCOKIECHOICESPRO_SAVE_PREFS_' . $lang['id_lang'])
+                );
             }
 
             Configuration::updateValue('ARTCOKIECHOICESPRO_TEXT', $artcookies_text);
             Configuration::updateValue('ARTCOKIECHOICESPRO_LINKTXT', $artcookies_linktxt);
             Configuration::updateValue('ARTCOKIECHOICESPRO_BUTTUMTXT', $artcookies_buttomtxt);
             Configuration::updateValue('ARTCOKIECHOICESPRO_REJECT', $artcookies_reject);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_CUSTOMIZE', $artcookies_customize);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_SAVE_PREFS', $artcookies_save_preferences);
             Configuration::updateValue('ARTCOKIECHOICESPRO_ACTIVE', (int) $artcookies_active);
             Configuration::updateValue('ARTCOKIECHOICESPRO_CONSENTMODE', (int) $artcookies_consentmode);
             Configuration::updateValue('ARTCOKIECHOICESPRO_PRIVACY_CMS', (int) $artcookies_cms);
             Configuration::updateValue('ARTCOKIECHOICESPRO_REVOKE', (int) $artcookies_revoke);
             Configuration::updateValue('ARTCOKIECHOICESPRO_TARGET', $artcookies_target);
+            $this->saveCookieCategoryStatus();
 
             $basic_setting = $this->renderForm();
             $this->_clearCache('artcookiechoices.tpl');
@@ -321,6 +354,7 @@ class ArtCokiechoicespro extends Module
                             'query' => [
                                  ['id' => 'top', 'name' => $this->l('top')],
                                  ['id' => 'bottom', 'name' => $this->l('bottom')],
+                                 ['id' => 'center', 'name' => $this->l('center')],
                                 ],
                             'id' => 'id',
                             'name' => 'name',
@@ -566,6 +600,20 @@ class ArtCokiechoicespro extends Module
                         'desc' => $this->l('Text buttom'),
                         ],
                     [
+                        'type' => 'text',
+                        'label' => $this->l('Customize Button Text'),
+                        'name' => Tools::strtoupper($this->name) . '_CUSTOMIZE',
+                        'lang' => true,
+                        'desc' => $this->l('Text for the button that opens cookie preferences'),
+                    ],
+                    [
+                        'type' => 'text',
+                        'label' => $this->l('Save Preferences Button Text'),
+                        'name' => Tools::strtoupper($this->name) . '_SAVE_PREFS',
+                        'lang' => true,
+                        'desc' => $this->l('Text for the button that saves selected cookie categories'),
+                    ],
+                    [
                         'type' => 'select',
                         'label' => $this->l('Select Privacy URL'),
                         'name' => Tools::strtoupper($this->name) . '_PRIVACY_CMS',
@@ -609,6 +657,101 @@ class ArtCokiechoicespro extends Module
                             'name' => 'name',
                         ],
                     ],
+                    [
+                        'type' => 'switch',
+                        'label' => $this->l('Functional cookies category'),
+                        'name' => Tools::strtoupper($this->name) . '_CAT_FUNCTIONAL_ACTIVE',
+                        'is_bool' => true,
+                        'desc' => $this->l('Allow customers to manage functional cookie consent'),
+                        'values' => [
+                            [
+                                'id' => 'functional_on',
+                                'value' => true,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'functional_off',
+                                'value' => false,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                    ],
+                    [
+                        'type' => 'switch',
+                        'label' => $this->l('Analytics cookies category'),
+                        'name' => Tools::strtoupper($this->name) . '_CAT_ANALYTICS_ACTIVE',
+                        'is_bool' => true,
+                        'desc' => $this->l('Allow customers to manage analytics cookie consent'),
+                        'values' => [
+                            [
+                                'id' => 'analytics_on',
+                                'value' => true,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'analytics_off',
+                                'value' => false,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                    ],
+                    [
+                        'type' => 'switch',
+                        'label' => $this->l('Performance cookies category'),
+                        'name' => Tools::strtoupper($this->name) . '_CAT_PERFORMANCE_ACTIVE',
+                        'is_bool' => true,
+                        'desc' => $this->l('Allow customers to manage performance cookie consent'),
+                        'values' => [
+                            [
+                                'id' => 'performance_on',
+                                'value' => true,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'performance_off',
+                                'value' => false,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                    ],
+                    [
+                        'type' => 'switch',
+                        'label' => $this->l('Advertising cookies category'),
+                        'name' => Tools::strtoupper($this->name) . '_CAT_MARKETING_ACTIVE',
+                        'is_bool' => true,
+                        'desc' => $this->l('Allow customers to manage advertising cookie consent'),
+                        'values' => [
+                            [
+                                'id' => 'marketing_on',
+                                'value' => true,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'marketing_off',
+                                'value' => false,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                    ],
+                    [
+                        'type' => 'switch',
+                        'label' => $this->l('Other cookies category'),
+                        'name' => Tools::strtoupper($this->name) . '_CAT_OTHER_ACTIVE',
+                        'is_bool' => true,
+                        'desc' => $this->l('Allow customers to manage uncategorized or custom cookie consent'),
+                        'values' => [
+                            [
+                                'id' => 'other_on',
+                                'value' => true,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'other_off',
+                                'value' => false,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                    ],
                 ],
                 'submit' => [
                     'title' => $this->l('Save'),
@@ -628,12 +771,16 @@ class ArtCokiechoicespro extends Module
         $artcookies_linktxt = [];
         $artcookies_buttomtxt = [];
         $artcookies_reject = [];
+        $artcookies_customize = [];
+        $artcookies_save_preferences = [];
 
         foreach ($languages as $language) {
             $artcookies_text[$language['id_lang']] = Configuration::get('ARTCOKIECHOICESPRO_TEXT', $language['id_lang']);
             $artcookies_linktxt[$language['id_lang']] = Configuration::get('ARTCOKIECHOICESPRO_LINKTXT', $language['id_lang']);
             $artcookies_buttomtxt[$language['id_lang']] = Configuration::get('ARTCOKIECHOICESPRO_BUTTUMTXT', $language['id_lang']);
             $artcookies_reject[$language['id_lang']] = Configuration::get('ARTCOKIECHOICESPRO_REJECT', $language['id_lang']);
+            $artcookies_customize[$language['id_lang']] = Configuration::get('ARTCOKIECHOICESPRO_CUSTOMIZE', $language['id_lang']);
+            $artcookies_save_preferences[$language['id_lang']] = Configuration::get('ARTCOKIECHOICESPRO_SAVE_PREFS', $language['id_lang']);
         }
 
         return [
@@ -646,7 +793,215 @@ class ArtCokiechoicespro extends Module
             'ARTCOKIECHOICESPRO_LINKTXT' => Tools::getValue('ARTCOKIECHOICESPRO_LINKTXT', $artcookies_linktxt),
             'ARTCOKIECHOICESPRO_BUTTUMTXT' => Tools::getValue('ARTCOKIECHOICESPRO_BUTTUMTXT', $artcookies_buttomtxt),
             'ARTCOKIECHOICESPRO_REJECT' => Tools::getValue('ARTCOKIECHOICESPRO_REJECT', $artcookies_reject),
+            'ARTCOKIECHOICESPRO_CUSTOMIZE' => Tools::getValue('ARTCOKIECHOICESPRO_CUSTOMIZE', $artcookies_customize),
+            'ARTCOKIECHOICESPRO_SAVE_PREFS' => Tools::getValue('ARTCOKIECHOICESPRO_SAVE_PREFS', $artcookies_save_preferences),
+            'ARTCOKIECHOICESPRO_CAT_FUNCTIONAL_ACTIVE' => Tools::getValue('ARTCOKIECHOICESPRO_CAT_FUNCTIONAL_ACTIVE', $this->getCookieCategoryActiveValue('functional')),
+            'ARTCOKIECHOICESPRO_CAT_ANALYTICS_ACTIVE' => Tools::getValue('ARTCOKIECHOICESPRO_CAT_ANALYTICS_ACTIVE', $this->getCookieCategoryActiveValue('analytics')),
+            'ARTCOKIECHOICESPRO_CAT_PERFORMANCE_ACTIVE' => Tools::getValue('ARTCOKIECHOICESPRO_CAT_PERFORMANCE_ACTIVE', $this->getCookieCategoryActiveValue('performance')),
+            'ARTCOKIECHOICESPRO_CAT_MARKETING_ACTIVE' => Tools::getValue('ARTCOKIECHOICESPRO_CAT_MARKETING_ACTIVE', $this->getCookieCategoryActiveValue('marketing')),
+            'ARTCOKIECHOICESPRO_CAT_OTHER_ACTIVE' => Tools::getValue('ARTCOKIECHOICESPRO_CAT_OTHER_ACTIVE', $this->getCookieCategoryActiveValue('other')),
         ];
+    }
+
+    public function getCookieCategoryKeys()
+    {
+        return [
+            'functional',
+            'analytics',
+            'performance',
+            'marketing',
+            'other',
+        ];
+    }
+
+    public function getDefaultCookieCategoryTexts()
+    {
+        return [
+            'necessary' => [
+                'label' => 'Necessary cookies',
+                'description' => 'Required for the shop to work and cannot be disabled.',
+            ],
+            'functional' => [
+                'label' => 'Functional cookies',
+                'description' => 'Help us provide enhanced features and remember your choices.',
+            ],
+            'analytics' => [
+                'label' => 'Analytics cookies',
+                'description' => 'Help us understand how customers use the shop.',
+            ],
+            'performance' => [
+                'label' => 'Performance cookies',
+                'description' => 'Help us measure and improve site performance.',
+            ],
+            'marketing' => [
+                'label' => 'Advertising cookies',
+                'description' => 'Allow personalized advertising and campaign measurement.',
+            ],
+            'other' => [
+                'label' => 'Other cookies',
+                'description' => 'Cover additional optional cookies not included in the other categories.',
+            ],
+        ];
+    }
+
+    public function installCookieCategoryConfiguration($category_labels = [], $category_descriptions = [])
+    {
+        $result = true;
+        $category_defaults = $this->getDefaultCookieCategoryTexts();
+        $category_keys = array_merge(['necessary'], $this->getCookieCategoryKeys());
+
+        foreach ($category_keys as $category_key) {
+            $config_key = Tools::strtoupper($category_key);
+            $labels = isset($category_labels[$category_key]) ? $category_labels[$category_key] : [];
+            $descriptions = isset($category_descriptions[$category_key]) ? $category_descriptions[$category_key] : [];
+
+            if (empty($labels)) {
+                $labels = $this->buildLocalizedDefaultValue($category_defaults[$category_key]['label']);
+            }
+
+            if (empty($descriptions)) {
+                $descriptions = $this->buildLocalizedDefaultValue($category_defaults[$category_key]['description']);
+            }
+
+            if ($category_key !== 'necessary') {
+                $result = $result && Configuration::updateValue(
+                    Tools::strtoupper($this->name) . '_CAT_' . $config_key . '_ACTIVE',
+                    '1'
+                );
+            }
+
+            $result = $result && Configuration::updateValue(
+                Tools::strtoupper($this->name) . '_CAT_' . $config_key . '_LABEL',
+                $labels
+            );
+            $result = $result && Configuration::updateValue(
+                Tools::strtoupper($this->name) . '_CAT_' . $config_key . '_DESC',
+                $descriptions
+            );
+        }
+
+        return $result;
+    }
+
+    public function deleteCookieCategoryConfiguration()
+    {
+        $category_keys = array_merge(['necessary'], $this->getCookieCategoryKeys());
+
+        foreach ($category_keys as $category_key) {
+            $config_key = Tools::strtoupper($category_key);
+            Configuration::deleteByName(Tools::strtoupper($this->name) . '_CAT_' . $config_key . '_ACTIVE');
+            Configuration::deleteByName(Tools::strtoupper($this->name) . '_CAT_' . $config_key . '_LABEL');
+            Configuration::deleteByName(Tools::strtoupper($this->name) . '_CAT_' . $config_key . '_DESC');
+        }
+    }
+
+    protected function saveCookieCategoryStatus()
+    {
+        foreach ($this->getCookieCategoryKeys() as $category_key) {
+            $config_key = 'ARTCOKIECHOICESPRO_CAT_' . Tools::strtoupper($category_key) . '_ACTIVE';
+            Configuration::updateValue($config_key, (int) Tools::getValue($config_key));
+        }
+    }
+
+    protected function getCookieCategoryActiveValue($category_key)
+    {
+        $value = Configuration::get('ARTCOKIECHOICESPRO_CAT_' . Tools::strtoupper($category_key) . '_ACTIVE');
+
+        if ($value === false) {
+            return 1;
+        }
+
+        return (int) $value;
+    }
+
+    protected function buildLocalizedDefaultValue($value)
+    {
+        $localized_value = [];
+        $languages = Language::getLanguages(false);
+
+        foreach ($languages as $lang) {
+            $localized_value[$lang['id_lang']] = pSQL($value);
+        }
+
+        return $localized_value;
+    }
+
+    protected function getLocalizedConfigurationValue($name, $id_lang, $fallback)
+    {
+        $value = Configuration::get($name, $id_lang);
+
+        if ($value === false || $value === '') {
+            return $fallback;
+        }
+
+        return $value;
+    }
+
+    protected function getCookieCategoriesForFront($id_lang)
+    {
+        $category_defaults = $this->getDefaultCookieCategoryTexts();
+        $categories = [];
+
+        $categories[] = $this->buildCookieCategoryForFront('necessary', $id_lang, $category_defaults, true);
+
+        foreach ($this->getCookieCategoryKeys() as $category_key) {
+            $active = $this->getCookieCategoryActiveValue($category_key);
+
+            if ($active !== 1) {
+                continue;
+            }
+
+            $categories[] = $this->buildCookieCategoryForFront($category_key, $id_lang, $category_defaults, false);
+        }
+
+        return $categories;
+    }
+
+    protected function buildCookieCategoryForFront($category_key, $id_lang, $category_defaults, $required)
+    {
+        $config_key = Tools::strtoupper($category_key);
+        $label = $this->getLocalizedConfigurationValue(
+            'ARTCOKIECHOICESPRO_CAT_' . $config_key . '_LABEL',
+            $id_lang,
+            $category_defaults[$category_key]['label']
+        );
+        $description = $this->getLocalizedConfigurationValue(
+            'ARTCOKIECHOICESPRO_CAT_' . $config_key . '_DESC',
+            $id_lang,
+            $category_defaults[$category_key]['description']
+        );
+
+        return [
+            'key' => $category_key,
+            'label' => $label,
+            'description' => $description,
+            'required' => (bool) $required,
+            'google' => $this->getGoogleConsentKeysForCategory($category_key),
+            'microsoft' => $this->getMicrosoftConsentKeysForCategory($category_key),
+        ];
+    }
+
+    protected function getGoogleConsentKeysForCategory($category_key)
+    {
+        $map = [
+            'necessary' => ['security_storage'],
+            'functional' => ['functionality_storage', 'personalization_storage'],
+            'analytics' => ['analytics_storage'],
+            'performance' => ['analytics_storage'],
+            'marketing' => ['ad_storage', 'ad_user_data', 'ad_personalization'],
+            'other' => [],
+        ];
+
+        return isset($map[$category_key]) ? $map[$category_key] : [];
+    }
+
+    protected function getMicrosoftConsentKeysForCategory($category_key)
+    {
+        $map = [
+            'marketing' => ['ad_storage'],
+        ];
+
+        return isset($map[$category_key]) ? $map[$category_key] : [];
     }
 
     public function getCmsLinks($lang = null)
@@ -687,10 +1042,20 @@ class ArtCokiechoicespro extends Module
         $art_privacy_text_link = Configuration::get(Tools::strtoupper($this->name . '_LINKTXT'), $active_lang);
         $art_privacy_button = Configuration::get(Tools::strtoupper($this->name . '_BUTTUMTXT'), $active_lang);
         $art_reject_button_txt = Configuration::get(Tools::strtoupper($this->name . '_REJECT'), $active_lang);
+        $art_customize_button_txt = Configuration::get(Tools::strtoupper($this->name . '_CUSTOMIZE'), $active_lang);
+        $art_save_preferences_txt = Configuration::get(Tools::strtoupper($this->name . '_SAVE_PREFS'), $active_lang);
         $art_privacy_cms = Configuration::get(Tools::strtoupper($this->name . '_PRIVACY_CMS'));
         $art_extactive = Configuration::get(Tools::strtoupper($this->name . '_EXTACTIVE'));
         $art_target = Configuration::get(Tools::strtoupper($this->name . '_TARGET'));
         $art_consentmode = Configuration::get(Tools::strtoupper($this->name . '_CONSENTMODE'));
+
+        if ($art_customize_button_txt === false || $art_customize_button_txt === '') {
+            $art_customize_button_txt = 'Customize';
+        }
+
+        if ($art_save_preferences_txt === false || $art_save_preferences_txt === '') {
+            $art_save_preferences_txt = 'Save preferences';
+        }
 
         if ($art_extactive == 0) {
             $art_privacy_link = $this->context->link->getCMSLink((int) $art_privacy_cms);
@@ -699,6 +1064,12 @@ class ArtCokiechoicespro extends Module
         }
 
         $arturi = Tools::getHttpHost(true) . __PS_BASE_URI__;
+        $art_cookie_categories_json = json_encode($this->getCookieCategoriesForFront((int) $active_lang));
+
+        if ($art_cookie_categories_json === false) {
+            $art_cookie_categories_json = '[]';
+        }
+
         $this->smarty->assign([
             'art_privacy_info' => $art_privacy_info,
             'arturi' => $arturi,
@@ -708,6 +1079,9 @@ class ArtCokiechoicespro extends Module
             'art_consentmode' => (int) $art_consentmode,
             'art_privacy_text_link' => $art_privacy_text_link,
             'art_reject_button_txt' => $art_reject_button_txt,
+            'art_customize_button_txt' => $art_customize_button_txt,
+            'art_save_preferences_txt' => $art_save_preferences_txt,
+            'art_cookie_categories_json' => $art_cookie_categories_json,
             ]);
 
         return $this->display(__FILE__, 'artcookiechoices.tpl');

@@ -14,8 +14,16 @@ The module is lightweight, fast, and does not rely on external libraries. It inc
 - GDPR-compliant cookie banner with **Accept**, **Reject**, and **Close (X)** actions.
 - No auto-accept behavior under any circumstance.
 - Proper handling of the `displayCookieConsent` cookie based on user choices.
+- Granular cookie preferences stored in `displayCookieConsentPreferences`.
 - Link/controller allowing users to **reopen cookie preferences** at any time.
 - Fully customizable text and behavior.
+- Banner position options: **top**, **bottom**, and **center**.
+- Configurable optional cookie categories:
+  - Functional cookies
+  - Analytics cookies
+  - Performance cookies
+  - Advertising cookies
+  - Other cookies
 - Support for:
   - **Google Consent Mode v2**
   - **Microsoft UET Consent Mode**
@@ -49,12 +57,17 @@ The module is lightweight, fast, and does not rely on external libraries. It inc
 - Customizable banner text.
 - Translatable button labels.
 - Custom link to allow users to review/change preferences.
+- Optional cookie categories can be enabled or disabled from the module configuration.
+- Banner position can be set to top, bottom, or center.
 - Consent Mode signals for:
   - `ad_storage`
   - `analytics_storage`
   - `ad_user_data`
   - `ad_personalization`
-- Optional JavaScript for blocking/unblocking tracking tools.
+  - `functionality_storage`
+  - `personalization_storage`
+  - `security_storage`
+- Microsoft UET `ad_storage` is mapped to the advertising category.
 
 ---
 
@@ -71,8 +84,8 @@ The module is lightweight, fast, and does not rely on external libraries. It inc
 
 ## 🧩 Google Consent Mode v2 Integration
 
-The module provides default Consent Mode v2 signals.  
-Developers may further extend behavior by hooking into JavaScript events after user choices.
+The module provides default Consent Mode v2 signals and updates them after user choices.
+Advertising consent controls `ad_storage`, `ad_user_data`, `ad_personalization`, and Microsoft UET `ad_storage`; analytics and performance consent control `analytics_storage`; functional consent controls `functionality_storage` and `personalization_storage`; necessary cookies keep `security_storage` granted.
 
 ---
 
@@ -81,7 +94,7 @@ Developers may further extend behavior by hooking into JavaScript events after u
 This module is released under the MIT License.
 You may freely use, modify, and distribute the software—even for commercial purposes—as long as the original copyright notice and license text are preserved.
 
-See the included LICENSE file for full terms.git status
+See the included LICENSE file for full terms.
 
 ---
 

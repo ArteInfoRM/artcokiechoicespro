@@ -3,6 +3,17 @@ All notable changes to this project are documented below.
 
 ---
 
+## [1.6.0] – 2026-06-07
+### Added
+- Added banner `center` position in addition to `top` and `bottom`.
+- Added configurable cookie categories: functional, analytics, performance, advertising and other cookies.
+- Added a front-office preferences panel with customizable button labels.
+
+### Improved
+- Improved Google Consent Mode v2 mapping with granular consent keys for advertising, analytics, functionality, personalization and security storage.
+- Improved Microsoft UET Consent Mode support by mapping advertising consent to `ad_storage`.
+- Kept backward compatibility with the existing `displayCookieConsent` cookie while adding granular preference storage.
+
 ## [1.5.5] – 2025-02-08
 ### Added
 - New disallow page with user feedback message and automatic redirect to the homepage.

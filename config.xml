@@ -2,7 +2,7 @@
 <module>
     <name>artcokiechoicespro</name>
     <displayName><![CDATA[PrestaShop Banner Cookiechoices (Eu Cookie Law) GDPR]]></displayName>
-    <version><![CDATA[1.5.5]]></version>
+    <version><![CDATA[1.6.0]]></version>
     <description><![CDATA[Free Cookie Tool: simple PrestaShop module that displays the EU Cookie Law banner based on Google&#039;s Cookiechoices.org. Updated to new 2022 rules.]]></description>
     <author><![CDATA[Tecnoacquisti.com]]></author>
     <tab><![CDATA[front_office_features]]></tab>

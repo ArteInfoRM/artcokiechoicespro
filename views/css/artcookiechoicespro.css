@@ -4,7 +4,9 @@
 		width: 100%;
 	}
 	#cookieChoiceInfo #InformativaAccetto,
-	#cookieChoiceInfo #InformativaReject {
+	#cookieChoiceInfo #InformativaReject,
+	#cookieChoiceInfo #InformativaCustomize,
+	#cookieChoiceInfo #InformativaSavePreferences {
 		font-size:14px;
 	}
 }
@@ -14,7 +16,9 @@
 
 	}
 	#cookieChoiceInfo #InformativaAccetto,
-	#cookieChoiceInfo #InformativaReject {
+	#cookieChoiceInfo #InformativaReject,
+	#cookieChoiceInfo #InformativaCustomize,
+	#cookieChoiceInfo #InformativaSavePreferences {
 		font-size:14px;
 		
 	}
@@ -25,7 +29,9 @@
 		
 	}
 	#cookieChoiceInfo #InformativaAccetto,
-	#cookieChoiceInfo #InformativaReject {
+	#cookieChoiceInfo #InformativaReject,
+	#cookieChoiceInfo #InformativaCustomize,
+	#cookieChoiceInfo #InformativaSavePreferences {
 		font-size:12px
 		
 	}
@@ -36,7 +42,9 @@
 		
 	}
 	#cookieChoiceInfo #InformativaAccetto,
-	#cookieChoiceInfo #InformativaReject {
+	#cookieChoiceInfo #InformativaReject,
+	#cookieChoiceInfo #InformativaCustomize,
+	#cookieChoiceInfo #InformativaSavePreferences {
 		font-size:12px;
 	
 	}
@@ -44,6 +52,7 @@
 
 #cookieChoiceInfo {
 	position:fixed;
+	box-sizing:border-box;
 	margin:0; 
 	left:0; 
 	padding:20px;
@@ -61,7 +70,9 @@
 }
 
 #cookieChoiceInfo #InformativaAccetto,
-#cookieChoiceInfo #InformativaReject {
+#cookieChoiceInfo #InformativaReject,
+#cookieChoiceInfo #InformativaCustomize,
+#cookieChoiceInfo #InformativaSavePreferences {
 	-webkit-border-radius: 6;
 	-moz-border-radius: 6;
 	border-radius: 6px;
@@ -72,7 +83,9 @@
 }
 
 #cookieChoiceInfo #InformativaAccetto:hover,
-#cookieChoiceInfo #InformativaReject:hover {
+#cookieChoiceInfo #InformativaReject:hover,
+#cookieChoiceInfo #InformativaCustomize:hover,
+#cookieChoiceInfo #InformativaSavePreferences:hover {
 	text-decoration: none;
 }
 
@@ -101,4 +114,35 @@
 #cookieChoiceInfo #InformativaClick {
 	text-decoration: underline;
 	background:none;
+}
+
+#cookieChoiceInfo #InformativaPreferences {
+	max-width: 720px;
+	margin: 14px auto;
+	padding: 12px;
+	text-align:left;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: 6px;
+}
+
+#cookieChoiceInfo .artcookie-category {
+	display:flex;
+	align-items:flex-start;
+	gap:10px;
+	margin: 0 0 10px 0;
+	cursor:pointer;
+}
+
+#cookieChoiceInfo .artcookie-category input {
+	margin-top:4px;
+	flex:0 0 auto;
+}
+
+#cookieChoiceInfo .artcookie-category span {
+	display:block;
+}
+
+#cookieChoiceInfo .artcookie-category strong {
+	display:block;
+	margin-bottom:3px;
 }

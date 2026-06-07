@@ -35,8 +35,21 @@
 #cookieChoiceInfo {ldelim}
 {if $artcookies_position == 'bottom'}
 bottom:0;
+left:0;
+width:100%;
+transform:none;
+{elseif $artcookies_position == 'center'}
+top:50%;
+left:50%;
+width:calc(100% - 32px);
+max-width:720px;
+border-radius:8px;
+transform:translate(-50%, -50%);
 {else}
 top:0;
+left:0;
+width:100%;
+transform:none;
 {/if}
 {rdelim}
 </style>
