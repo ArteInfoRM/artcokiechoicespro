@@ -9,10 +9,12 @@ All notable changes to this project are documented below.
 - Added SEO protection to hide the cookie banner from configured crawler user agents.
 - Added localized default cookie notice text for English, Italian, Spanish, French and German.
 - Added localized default cookie link and button labels for English, Italian, Spanish, French and German.
+- Completed module translation keys for Italian, Spanish, French, German, British English and Polish based on the updated English source.
 - Added a curated default crawler list for Google, Bing/Microsoft, DuckDuckGo, Yandex, Apple and social preview bots.
 - Fixed crawler list storage to preserve real line breaks across PrestaShop versions.
 - Updated the README with the current module behavior and setup notes.
 - Fixed additional PrestaShop Validator warnings for license headers, array syntax, upgrade compatibility and template escaping.
+- Documented trusted Back Office HelperForm markup where `nofilter` is required to preserve generated form HTML.
 
 ## [1.6.0] – 2026-06-07
 ### Added

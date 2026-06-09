@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = [];
+$_MODULE = array();
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c9ef2e832a342d03834041c7744d87ff'] = 'PrestaShop Banner Cookiechoices (Eu Cookie Law) GDPR';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c1f78468b2319d5de7edf13009b00e8f'] = 'Free Cookie Tool: simple PrestaShop module that displays the EU Cookie Law banner based on Google\'s Cookiechoices.org. Updated to new 2022 rules.';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_0266804ebcf8ecfb01f418fac76a7ada'] = 'Advanced settings updated';
@@ -13,6 +13,7 @@ $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_f28da8fd35d7ee724c2
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_5ad47997df22c6aa28892e64686e9196'] = 'Banner Position';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_b28354b543375bfa94dabaeda722927f'] = 'top';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_71f262d796bed1ab30e8a2d5a8ddee6f'] = 'bottom';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_adb115059e28d960fa8badfac5516667'] = 'center';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_b467795882ef6efaf4c507664e9249c9'] = 'Load jQUERY';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_b1653bf3e946ef9579074f93c7979b8c'] = 'If your theme does not load jQUERY';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Enabled';
@@ -33,6 +34,10 @@ $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_d679a34a271d26527cb
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c5838048357c33babd3749fbc3044bba'] = 'Disable the click on the page';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_ff48dca9d8e2e5e75ba6f429eb99fb86'] = 'Alternative Privacy URL';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_8e242fcd9a619d84c803a299595c6786'] = 'Link to external privacy information';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c298cf027c92c342e78d7663f1a2e938'] = 'SEO protection';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_da2a96ec6947f44bd8eb97713a633417'] = 'Hide the cookie banner and preference links from known search engine crawlers.';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_6366970016445750888ef757400efde3'] = 'Crawler user agents';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_3c671eddfe5ced6c3f52af327142a398'] = 'One crawler signature per line. Comma-separated lists are also accepted. Matching is case-insensitive.';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c9cc8cce247e49bae79f15173ce97354'] = 'Save';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_07db26d2c2e082e84e75b1e69c41ac9e'] = 'Activate Cookies Banner';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_65c662eaf11cba1a62c81c4b85b3e9f1'] = 'Activate the Banner Cookiechoices (EU Cookie Law)';
@@ -45,6 +50,10 @@ $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_7e0226966e974436881
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_6b97cf727b84b00655b299c8e9612ff3'] = 'Buttom Reject Text';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_fa960ae6e24bc80a589dc8d032273228'] = 'Text buttom';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_faf3c7f0c66d8f2e13f5a4fe4d7d2fe7'] = 'Buttom Accept Text';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_8712a2481aedfdf3748966cdf5a5e8fb'] = 'Customize Button Text';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_75c7ac9393ed9e10fedbbc2f97d60a31'] = 'Text for the button that opens cookie preferences';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_05f6eebbda64aecb6c680efb0d8587d5'] = 'Save Preferences Button Text';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_949ba82cb4c84102fc90658a986a8bb2'] = 'Text for the button that saves selected cookie categories';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_5f3e1cffb11f06cab65ea550d5d8e07c'] = 'Select Privacy URL';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_5713862b4b6b86423ba290b57b87a224'] = 'Select CMS of your cookies text';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_90258b83be164efd57c5d7676692a099'] = 'Link target atribute';
@@ -60,8 +69,24 @@ $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c20a47f38749c593c79
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_ce323f37858ed801eb4e7914f33b041d'] = 'displayFooter';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_7bf7dfcfc21804d0b430128cfacf3f9c'] = 'displayFooterAfter';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_dad7a0de81e5b12a47a74e52f9c1eb23'] = 'CookiesDisable';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_74266ee158f760129d7e456cebda7146'] = 'Functional cookies category';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_9f61b54de137ad4fed783cd12b65f5e1'] = 'Allow customers to manage functional cookie consent';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_3c218d4919391d6b0ffc965dfa3323f7'] = 'Analytics cookies category';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_eea0d83716f14f3972e961611cce76a6'] = 'Allow customers to manage analytics cookie consent';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_2d7bb37b85895f5971090deb58f2d39f'] = 'Performance cookies category';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_437e3db80bb21fdd7e576cec0840ff49'] = 'Allow customers to manage performance cookie consent';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_e9e5391feaf3c16896d881a995093070'] = 'Advertising cookies category';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_d68489812dd08d2de8d3ce5264d09cec'] = 'Allow customers to manage advertising cookie consent';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_168b1ca1e67a20ed1c9c9ad5430aa3ed'] = 'Other cookies category';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_78dea3ae91d83ce2f458d221116af485'] = 'Allow customers to manage uncategorized or custom cookie consent';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_a1d42a33fb4d9c511eccd227ea73189a'] = 'Select CMS';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_ea4788705e6873b424c65e91c2846b19'] = 'Cancel';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_a50239593db1c9df6d42238d7c9cc1b1'] = 'Reject all';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_48370f4569986eaa67d94a3f6e013b49'] = 'Accept selection';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_3d0238bf1643e39636b1f5040af3bf6f'] = 'Accept all';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_4ce38cf74abed60ab71a57ce21ab464b'] = 'Cookie preferences';
 $_MODULE['<{artcokiechoicespro}prestashop>unsubscribe_6b4b410f49d935eeff56ace5666bc547'] = 'Update your Cookie preferences';
+$_MODULE['<{artcokiechoicespro}prestashop>account-preferences_6b4b410f49d935eeff56ace5666bc547'] = ' Update your Cookie preferences';
 $_MODULE['<{artcokiechoicespro}prestashop>disallow-17_9b77a31e40f0b9293a12befa02a5701c'] = 'Cookie preferences updated';
 $_MODULE['<{artcokiechoicespro}prestashop>disallow-17_ea988d2da73920759f2aca8ea4056d63'] = 'Your cookie preferences have been reset. You will be redirected to the home page in a few seconds.';
 $_MODULE['<{artcokiechoicespro}prestashop>disallow-17_446b416d535ed3f547fcd653dc11d49c'] = 'Invalid request';

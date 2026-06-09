@@ -27,6 +27,8 @@ Consent Mode without requiring core overrides.
 - Microsoft UET Consent Mode support.
 - SEO protection that hides cookie UI from configured crawler user agents.
 - Localized installation defaults for English, Italian, Spanish, French and German.
+- Module translations aligned for English, Italian, Spanish, French, German,
+  British English and Polish.
 - Theme-friendly markup and CSS, with a native account-page tile layout.
 
 ## Compatibility
@@ -111,6 +113,17 @@ for English, Italian, Spanish, French and German:
 Any other active language falls back to English. Existing merchant-customized
 texts are not overwritten by upgrades.
 
+The module translation files also include the same interface keys for English,
+Italian, Spanish, French, German, British English and Polish, so back-office and
+front-office labels remain available through the PrestaShop translation system.
+
+## Back Office Rendering
+
+The configuration page uses PrestaShop HelperForm to generate trusted Back
+Office form markup. The Smarty template keeps that generated markup unescaped so
+the form HTML remains functional, with an inline comment documenting why the
+`nofilter` modifier is intentional.
+
 ## Consent Mode Mapping
 
 Google Consent Mode v2 signals are updated after user choices:
@@ -131,6 +144,8 @@ Version `1.6.1` includes:
 - Account-page preferences tile.
 - SEO protection for crawler user agents.
 - Localized installation defaults for banner and button text.
+- Completed module translation keys across bundled languages.
+- Validator-oriented documentation for trusted Back Office HelperForm markup.
 - Improved consent reset behavior.
 - Removal of the old documentation image asset.
 - Release archive cleanup through `.gitattributes`.
