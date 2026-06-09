@@ -12,7 +12,6 @@
 *}
 <div class="panel">
     <h3><i class="icon icon-tags"></i> {l s='Documentation' mod='artcokiechoicespro'}</h3>
-		<img src="{$shop_base_url|escape:'htmlall':'UTF-8'}modules/artcokiechoicespro/views/img/cookies-eu.jpg" alt="Arte e Informatica" title="Arte e Informatica"><br />
 	<b>{l s='Why is this important?' mod='artcokiechoicespro'}</b><br />
 	<p>
 	{l s='European laws require that digital publishers give visitors to their sites and apps information about their use of cookies and other forms of local storage. In many cases these laws also require that consent be obtained.'  mod='artcokiechoicespro'}

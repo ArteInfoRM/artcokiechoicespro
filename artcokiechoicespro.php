@@ -7,7 +7,7 @@
  *  @author    Arte e Informatica <shop@tecnoacquisti.com>
  *  @copyright 2009-2025 Arte e Informatica
  *  @license   One Paid Licence By WebSite Using This Module. No Rent. No Sell. No Share.
- *  @version   1.6.0
+ *  @version   1.6.1
  */
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -19,7 +19,7 @@ class ArtCokiechoicespro extends Module
     {
         $this->name = 'artcokiechoicespro';
         $this->tab = 'front_office_features';
-        $this->version = '1.6.0';
+        $this->version = '1.6.1';
         $this->author = 'Tecnoacquisti.com';
         $this->need_instance = 0;
 
@@ -46,17 +46,25 @@ class ArtCokiechoicespro extends Module
         $category_defaults = $this->getDefaultCookieCategoryTexts();
         $category_labels = [];
         $category_descriptions = [];
+        $privacy_notice_texts = $this->getDefaultPrivacyNoticeTexts();
+        $interface_texts = $this->getDefaultInterfaceTexts();
 
         foreach ($languages as $lang) {
-            $artcookies_text[$lang['id_lang']] = pSQL(
-                'We and selected third parties use cookies or similar technologies for technical purposes and, with your consent, for “experience enhancement”, “measurement” and “targeting and advertising” as specified in the cookie policy. Denying consent may make related features unavailable. You can freely give, deny, or withdraw your consent at any time. To find out more about the categories of personal information collected and the purposes for which such information will be used, please refer to our privacy policy. Use the “Accept” button to consent to the use of such technologies. Use the “Reject” button or close this notice to continue without accepting.'
-            );
+            $iso_code = isset($lang['iso_code']) ? Tools::strtolower((string) $lang['iso_code']) : 'en';
+            $privacy_notice_text = isset($privacy_notice_texts[$iso_code]) ?
+                $privacy_notice_texts[$iso_code] :
+                $privacy_notice_texts['en'];
+            $interface_text = isset($interface_texts[$iso_code]) ?
+                $interface_texts[$iso_code] :
+                $interface_texts['en'];
+
+            $artcookies_text[$lang['id_lang']] = pSQL($privacy_notice_text);
             $artcookies_url[$lang['id_lang']] = pSQL('#');
-            $artcookies_linktxt[$lang['id_lang']] = pSQL('Read the Privacy Policy');
-            $artcookies_buttomtxt[$lang['id_lang']] = pSQL('Accept');
-            $artcookies_reject[$lang['id_lang']] = pSQL('Reject');
-            $artcookies_customize[$lang['id_lang']] = pSQL('Customize');
-            $artcookies_save_preferences[$lang['id_lang']] = pSQL('Save preferences');
+            $artcookies_linktxt[$lang['id_lang']] = pSQL($interface_text['privacy_link']);
+            $artcookies_buttomtxt[$lang['id_lang']] = pSQL($interface_text['accept']);
+            $artcookies_reject[$lang['id_lang']] = pSQL($interface_text['reject']);
+            $artcookies_customize[$lang['id_lang']] = pSQL($interface_text['customize']);
+            $artcookies_save_preferences[$lang['id_lang']] = pSQL($interface_text['save_preferences']);
 
             foreach ($category_defaults as $category_key => $category_default) {
                 $category_labels[$category_key][$lang['id_lang']] = pSQL($category_default['label']);
@@ -88,12 +96,15 @@ class ArtCokiechoicespro extends Module
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_LOADKJS', '0')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_POSITION', 'bottom')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_REVOKE', '0')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_SEO_PROTECTION', '1')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_SEO_BOTS', $this->getDefaultSeoBotList())
             && $this->installCookieCategoryConfiguration($category_labels, $category_descriptions)
             && $this->registerHook('header')
             && $this->registerHook('CookiesDisable')
             && $this->registerHook('displayFooterBefore')
             && $this->registerHook('displayFooter')
-            && $this->registerHook('displayFooterAfter');
+            && $this->registerHook('displayFooterAfter')
+            && $this->registerHook('displayCustomerAccount');
     }
 
     public function uninstall()
@@ -121,6 +132,8 @@ class ArtCokiechoicespro extends Module
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_POSITION');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_DISABLE');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_REVOKE');
+        Configuration::deleteByName(Tools::strtoupper($this->name) . '_SEO_PROTECTION');
+        Configuration::deleteByName(Tools::strtoupper($this->name) . '_SEO_BOTS');
         $this->deleteCookieCategoryConfiguration();
 
         return parent::uninstall();
@@ -158,9 +171,15 @@ class ArtCokiechoicespro extends Module
             $artcookies_compress = Tools::getValue('ARTCOKIECHOICESPRO_COMPRESS');
             $artcookies_position = Tools::getValue('ARTCOKIECHOICESPRO_POSITION');
             $artcookies_disable = Tools::getValue('ARTCOKIECHOICESPRO_DISABLE');
+            $artcookies_seo_protection = Tools::getValue('ARTCOKIECHOICESPRO_SEO_PROTECTION');
+            $artcookies_seo_bots = $this->normalizeSeoBotList((string) Tools::getValue('ARTCOKIECHOICESPRO_SEO_BOTS'));
 
             if (!in_array($artcookies_position, ['top', 'bottom', 'center'], true)) {
                 $artcookies_position = 'bottom';
+            }
+
+            if ($artcookies_seo_bots === '') {
+                $artcookies_seo_bots = $this->getDefaultSeoBotList();
             }
 
             foreach ($languages as $lang) {
@@ -181,6 +200,8 @@ class ArtCokiechoicespro extends Module
             Configuration::updateValue('ARTCOKIECHOICESPRO_LOADKJS', pSQL($artloadjs));
             Configuration::updateValue('ARTCOKIECHOICESPRO_SHADOW', (int) $artcookies_shadow);
             Configuration::updateValue('ARTCOKIECHOICESPRO_COMPRESS', (int) $artcookies_compress);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_SEO_PROTECTION', (int) $artcookies_seo_protection);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_SEO_BOTS', $artcookies_seo_bots);
 
             $advanced_setting = $this->renderAdvForm();
             $this->_clearCache('artcookiechoices.tpl');
@@ -481,6 +502,33 @@ class ArtCokiechoicespro extends Module
                         'autoload_rte' => true,
                         'desc' => $this->l('Link to external privacy information'),
                     ],
+                    [
+                        'type' => 'switch',
+                        'label' => $this->l('SEO protection'),
+                        'name' => Tools::strtoupper($this->name) . '_SEO_PROTECTION',
+                        'is_bool' => true,
+                        'desc' => $this->l('Hide the cookie banner and preference links from known search engine crawlers.'),
+                        'values' => [
+                            [
+                                'id' => 'active_on',
+                                'value' => true,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'active_off',
+                                'value' => false,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                    ],
+                    [
+                        'type' => 'textarea',
+                        'label' => $this->l('Crawler user agents'),
+                        'name' => Tools::strtoupper($this->name) . '_SEO_BOTS',
+                        'cols' => 60,
+                        'rows' => 8,
+                        'desc' => $this->l('One crawler signature per line. Comma-separated lists are also accepted. Matching is case-insensitive.'),
+                    ],
                 ],
                 'submit' => [
                     'title' => $this->l('Save'),
@@ -514,6 +562,11 @@ class ArtCokiechoicespro extends Module
             'ARTCOKIECHOICESPRO_POSITION' => Tools::getValue('ARTCOKIECHOICESPRO_POSITION', Configuration::get('ARTCOKIECHOICESPRO_POSITION')),
             'ARTCOKIECHOICESPRO_DISABLE' => Tools::getValue('ARTCOKIECHOICESPRO_DISABLE', Configuration::get('ARTCOKIECHOICESPRO_DISABLE')),
             'ARTCOKIECHOICESPRO_PRIVACY_EXT' => Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_EXT', $artcookies_url),
+            'ARTCOKIECHOICESPRO_SEO_PROTECTION' => Tools::getValue('ARTCOKIECHOICESPRO_SEO_PROTECTION', Configuration::get('ARTCOKIECHOICESPRO_SEO_PROTECTION')),
+            'ARTCOKIECHOICESPRO_SEO_BOTS' => Tools::getValue(
+                'ARTCOKIECHOICESPRO_SEO_BOTS',
+                $this->normalizeSeoBotList((string) Configuration::get('ARTCOKIECHOICESPRO_SEO_BOTS'))
+            ),
         ];
     }
 
@@ -844,6 +897,58 @@ class ArtCokiechoicespro extends Module
         ];
     }
 
+    public function getDefaultPrivacyNoticeTexts()
+    {
+        return [
+            'en' => 'We use cookies and similar technologies to make this website work, improve your experience, measure traffic, and personalize content or ads. Some cookies are necessary and are always active; optional cookies are used only with your consent. You can accept all cookies, reject optional cookies, or customize your preferences at any time. For more information, please read our cookie policy.',
+            'it' => 'Utilizziamo cookie e tecnologie simili per far funzionare questo sito, migliorare la tua esperienza, misurare il traffico e personalizzare contenuti o annunci. Alcuni cookie sono necessari e sono sempre attivi; i cookie opzionali vengono utilizzati solo con il tuo consenso. Puoi accettare tutti i cookie, rifiutare quelli opzionali o personalizzare le preferenze in qualsiasi momento. Per maggiori informazioni, leggi la nostra cookie policy.',
+            'es' => 'Utilizamos cookies y tecnologías similares para que este sitio funcione, mejorar tu experiencia, medir el tráfico y personalizar contenidos o anuncios. Algunas cookies son necesarias y están siempre activas; las cookies opcionales se utilizan solo con tu consentimiento. Puedes aceptar todas las cookies, rechazar las opcionales o personalizar tus preferencias en cualquier momento. Para más información, lee nuestra política de cookies.',
+            'fr' => 'Nous utilisons des cookies et des technologies similaires pour faire fonctionner ce site, améliorer votre expérience, mesurer le trafic et personnaliser les contenus ou les publicités. Certains cookies sont nécessaires et restent toujours actifs; les cookies optionnels ne sont utilisés qu’avec votre consentement. Vous pouvez accepter tous les cookies, refuser les cookies optionnels ou personnaliser vos préférences à tout moment. Pour en savoir plus, consultez notre politique relative aux cookies.',
+            'de' => 'Wir verwenden Cookies und ähnliche Technologien, damit diese Website funktioniert, um Ihre Erfahrung zu verbessern, den Datenverkehr zu messen und Inhalte oder Anzeigen zu personalisieren. Einige Cookies sind erforderlich und immer aktiv; optionale Cookies werden nur mit Ihrer Zustimmung verwendet. Sie können alle Cookies akzeptieren, optionale Cookies ablehnen oder Ihre Einstellungen jederzeit anpassen. Weitere Informationen finden Sie in unserer Cookie-Richtlinie.',
+        ];
+    }
+
+    public function getDefaultInterfaceTexts()
+    {
+        return [
+            'en' => [
+                'privacy_link' => 'Read the cookie policy',
+                'reject' => 'Reject',
+                'accept' => 'Accept',
+                'customize' => 'Customize',
+                'save_preferences' => 'Save preferences',
+            ],
+            'it' => [
+                'privacy_link' => 'Leggi la cookie policy',
+                'reject' => 'Rifiuta',
+                'accept' => 'Accetta',
+                'customize' => 'Personalizza',
+                'save_preferences' => 'Salva preferenze',
+            ],
+            'es' => [
+                'privacy_link' => 'Leer la politica de cookies',
+                'reject' => 'Rechazar',
+                'accept' => 'Aceptar',
+                'customize' => 'Personalizar',
+                'save_preferences' => 'Guardar preferencias',
+            ],
+            'fr' => [
+                'privacy_link' => 'Lire la politique relative aux cookies',
+                'reject' => 'Refuser',
+                'accept' => 'Accepter',
+                'customize' => 'Personnaliser',
+                'save_preferences' => 'Enregistrer les preferences',
+            ],
+            'de' => [
+                'privacy_link' => 'Cookie-Richtlinie lesen',
+                'reject' => 'Ablehnen',
+                'accept' => 'Akzeptieren',
+                'customize' => 'Anpassen',
+                'save_preferences' => 'Einstellungen speichern',
+            ],
+        ];
+    }
+
     public function installCookieCategoryConfiguration($category_labels = [], $category_descriptions = [])
     {
         $result = true;
@@ -935,6 +1040,97 @@ class ArtCokiechoicespro extends Module
         }
 
         return $value;
+    }
+
+    protected function getDefaultSeoBotList()
+    {
+        return implode("\n", [
+            'Googlebot',
+            'Google-InspectionTool',
+            'AdsBot-Google',
+            'Mediapartners-Google',
+            'bingbot',
+            'BingPreview',
+            'AdIdxBot',
+            'MicrosoftPreview',
+            'DuckDuckBot',
+            'YandexBot',
+            'Applebot',
+            'facebookexternalhit',
+            'facebot',
+            'Twitterbot',
+            'LinkedInBot',
+            'Pinterestbot',
+        ]);
+    }
+
+    protected function normalizeSeoBotList($bot_list)
+    {
+        return implode("\n", $this->parseSeoBotList($bot_list));
+    }
+
+    protected function parseSeoBotList($bot_list)
+    {
+        $normalized_bot_list = str_replace(['\\r\\n', '\\n', '\\r'], "\n", (string) $bot_list);
+        $items = preg_split('/[\r\n,]+/', $normalized_bot_list);
+        $bots = [];
+        $seen = [];
+
+        if (!is_array($items)) {
+            return [];
+        }
+
+        foreach ($items as $item) {
+            $bot = trim(strip_tags((string) $item));
+            $bot = preg_replace('/[[:cntrl:]]+/', '', $bot);
+
+            if (!is_string($bot)) {
+                continue;
+            }
+
+            $bot = trim($bot);
+
+            if ($bot === '' || Tools::strlen($bot) < 3) {
+                continue;
+            }
+
+            $bot = Tools::substr($bot, 0, 80);
+            $key = Tools::strtolower($bot);
+
+            if (isset($seen[$key])) {
+                continue;
+            }
+
+            $seen[$key] = true;
+            $bots[] = $bot;
+        }
+
+        return $bots;
+    }
+
+    protected function isSeoBotRequest()
+    {
+        if (!(bool) Configuration::get('ARTCOKIECHOICESPRO_SEO_PROTECTION')) {
+            return false;
+        }
+
+        if (!isset($_SERVER['HTTP_USER_AGENT']) || trim((string) $_SERVER['HTTP_USER_AGENT']) === '') {
+            return false;
+        }
+
+        $bot_list = (string) Configuration::get('ARTCOKIECHOICESPRO_SEO_BOTS');
+
+        if ($bot_list === '') {
+            $bot_list = $this->getDefaultSeoBotList();
+        }
+
+        foreach ($this->parseSeoBotList($bot_list) as $bot) {
+            if (stripos((string) $_SERVER['HTTP_USER_AGENT'], $bot) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function getCookieCategoriesForFront($id_lang)
@@ -1037,6 +1233,10 @@ class ArtCokiechoicespro extends Module
 
     public function cookiesBar()
     {
+        if ($this->isSeoBotRequest()) {
+            return '';
+        }
+
         $active_lang = $this->context->language->id;
         $art_privacy_info = Configuration::get(Tools::strtoupper($this->name . '_TEXT'), $active_lang);
         $art_privacy_text_link = Configuration::get(Tools::strtoupper($this->name . '_LINKTXT'), $active_lang);
@@ -1044,6 +1244,11 @@ class ArtCokiechoicespro extends Module
         $art_reject_button_txt = Configuration::get(Tools::strtoupper($this->name . '_REJECT'), $active_lang);
         $art_customize_button_txt = Configuration::get(Tools::strtoupper($this->name . '_CUSTOMIZE'), $active_lang);
         $art_save_preferences_txt = Configuration::get(Tools::strtoupper($this->name . '_SAVE_PREFS'), $active_lang);
+        $art_cancel_preferences_txt = $this->l('Cancel');
+        $art_reject_all_txt = $this->l('Reject all');
+        $art_accept_selection_txt = $this->l('Accept selection');
+        $art_accept_all_txt = $this->l('Accept all');
+        $art_cookie_preferences_title = $this->l('Cookie preferences');
         $art_privacy_cms = Configuration::get(Tools::strtoupper($this->name . '_PRIVACY_CMS'));
         $art_extactive = Configuration::get(Tools::strtoupper($this->name . '_EXTACTIVE'));
         $art_target = Configuration::get(Tools::strtoupper($this->name . '_TARGET'));
@@ -1064,6 +1269,14 @@ class ArtCokiechoicespro extends Module
         }
 
         $arturi = Tools::getHttpHost(true) . __PS_BASE_URI__;
+        $art_disallow_link = $this->context->link->getModuleLink(
+            $this->name,
+            'disallow',
+            [
+                'token' => md5(_COOKIE_KEY_ . $this->name),
+            ],
+            true
+        );
         $art_cookie_categories_json = json_encode($this->getCookieCategoriesForFront((int) $active_lang));
 
         if ($art_cookie_categories_json === false) {
@@ -1081,6 +1294,12 @@ class ArtCokiechoicespro extends Module
             'art_reject_button_txt' => $art_reject_button_txt,
             'art_customize_button_txt' => $art_customize_button_txt,
             'art_save_preferences_txt' => $art_save_preferences_txt,
+            'art_cancel_preferences_txt' => $art_cancel_preferences_txt,
+            'art_reject_all_txt' => $art_reject_all_txt,
+            'art_accept_selection_txt' => $art_accept_selection_txt,
+            'art_accept_all_txt' => $art_accept_all_txt,
+            'art_cookie_preferences_title' => $art_cookie_preferences_title,
+            'art_disallow_link' => $art_disallow_link,
             'art_cookie_categories_json' => $art_cookie_categories_json,
             ]);
 
@@ -1089,6 +1308,10 @@ class ArtCokiechoicespro extends Module
 
     public function hookHeader($params)
     {
+        if ($this->isSeoBotRequest()) {
+            return '';
+        }
+
         if ($this->active) {
             $this->context->controller->addCSS($this->_path . '/views/css/artcookiechoicespro.css', 'all');
         }
@@ -1120,6 +1343,10 @@ class ArtCokiechoicespro extends Module
 
     public function showUnsubscribe()
     {
+        if ($this->isSeoBotRequest()) {
+            return '';
+        }
+
         $link = $this->context->link->getModuleLink(
             $this->name,
             'disallow',
@@ -1134,6 +1361,28 @@ class ArtCokiechoicespro extends Module
         ]);
 
         return $this->display(__FILE__, 'unsubscribe.tpl');
+    }
+
+    public function showAccountPreferencesLink()
+    {
+        if ($this->isSeoBotRequest()) {
+            return '';
+        }
+
+        $link = $this->context->link->getModuleLink(
+            $this->name,
+            'disallow',
+            [
+                'token' => md5(_COOKIE_KEY_ . $this->name),
+            ],
+            true
+        );
+
+        $this->smarty->assign([
+            'link' => $link,
+        ]);
+
+        return $this->display(__FILE__, 'account-preferences.tpl');
     }
 
     public function hookDisplayFooterBefore()
@@ -1170,6 +1419,11 @@ class ArtCokiechoicespro extends Module
             $out .= $this->showUnsubscribe();
         }
         return $out;
+    }
+
+    public function hookDisplayCustomerAccount()
+    {
+        return $this->showAccountPreferencesLink();
     }
 
     public function hookCookiesDisable()

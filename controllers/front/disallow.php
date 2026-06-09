@@ -25,10 +25,15 @@ class ArtcokiechoicesproDisallowModuleFrontController extends ModuleFrontControl
         $this->valid_token = md5(_COOKIE_KEY_ . $this->module->name) === Tools::getValue('token', '');
 
         if ($this->valid_token) {
-            $cookie_name = 'displayCookieConsent';
-            // Cancella il cookie a livello di root
-            setcookie($cookie_name, '', time() - 3600, '/');
-            unset($_COOKIE[$cookie_name]);
+            $cookie_names = [
+                'displayCookieConsent',
+                'displayCookieConsentPreferences',
+            ];
+
+            foreach ($cookie_names as $cookie_name) {
+                setcookie($cookie_name, '', time() - 3600, '/');
+                unset($_COOKIE[$cookie_name]);
+            }
         }
     }
 
@@ -50,4 +55,3 @@ class ArtcokiechoicesproDisallowModuleFrontController extends ModuleFrontControl
         $this->setTemplate('module:artcokiechoicespro/views/templates/front/disallow-17.tpl');
     }
 }
-

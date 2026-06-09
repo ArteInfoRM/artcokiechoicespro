@@ -27,9 +27,17 @@
 	color: {$artcookies_txtcolor|escape:'htmlall':'UTF-8'} !important;
 	{rdelim}
 #cookieChoiceInfo #InformativaAccetto,
-#cookieChoiceInfo #InformativaReject {ldelim}
+#cookieChoiceInfo #InformativaReject,
+#cookieChoiceInfo #InformativaCustomize,
+#InformativaPreferencesModal #InformativaAccetto,
+#InformativaPreferencesModal #InformativaReject,
+#InformativaPreferencesModal #InformativaSavePreferences {ldelim}
 	background: {$artcookies_button|escape:'htmlall':'UTF-8'} !important;
 	color: {$artcookies_tbutton|escape:'htmlall':'UTF-8'} !important;
+{rdelim}
+
+#InformativaPreferencesModal .artcookie-preferences-header {ldelim}
+	border-top: 4px solid {$artcookies_button|escape:'htmlall':'UTF-8'} !important;
 {rdelim}
 
 #cookieChoiceInfo {ldelim}

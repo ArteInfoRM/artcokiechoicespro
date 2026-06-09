@@ -61,6 +61,15 @@ $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_ce323f37858ed801eb4
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_7bf7dfcfc21804d0b430128cfacf3f9c'] = 'displayFooterAfter';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_dad7a0de81e5b12a47a74e52f9c1eb23'] = 'CookiesDisable';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_a1d42a33fb4d9c511eccd227ea73189a'] = 'Seleziona CMS ';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_ea4788705e6873b424c65e91c2846b19'] = 'Cancella';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_a50239593db1c9df6d42238d7c9cc1b1'] = 'Rifiuta Tutti';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_48370f4569986eaa67d94a3f6e013b49'] = 'Accetta la Selezione';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_3d0238bf1643e39636b1f5040af3bf6f'] = 'Accetta Tutti';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_4ce38cf74abed60ab71a57ce21ab464b'] = 'Preferenze dei cookie';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c298cf027c92c342e78d7663f1a2e938'] = 'Protezione SEO';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_da2a96ec6947f44bd8eb97713a633417'] = 'Nasconde il banner cookie e i link preferenze ai crawler noti dei motori di ricerca.';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_6366970016445750888ef757400efde3'] = 'User agent crawler';
+$_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_3c671eddfe5ced6c3f52af327142a398'] = 'Una firma crawler per riga. Sono accettate anche liste separate da virgole. Il confronto non distingue maiuscole e minuscole.';
 $_MODULE['<{artcokiechoicespro}prestashop>unsubscribe_6b4b410f49d935eeff56ace5666bc547'] = 'Aggiorna le preferenze dei Cookies';
 $_MODULE['<{artcokiechoicespro}prestashop>disallow-17_9b77a31e40f0b9293a12befa02a5701c'] = 'Preferenze sui cookie aggiornate';
 $_MODULE['<{artcokiechoicespro}prestashop>disallow-17_ea988d2da73920759f2aca8ea4056d63'] = 'Le tue preferenze sui cookie sono state reimpostate. Verrai reindirizzato alla home page tra pochi secondi.';

@@ -3,6 +3,15 @@ All notable changes to this project are documented below.
 
 ---
 
+## [1.6.1] - 2026-06-09
+### Added
+- Added the cookie preferences link to the customer account page.
+- Added SEO protection to hide the cookie banner from configured crawler user agents.
+- Added localized default cookie notice text for English, Italian, Spanish, French and German.
+- Added localized default cookie link and button labels for English, Italian, Spanish, French and German.
+- Added a curated default crawler list for Google, Bing/Microsoft, DuckDuckGo, Yandex, Apple and social preview bots.
+- Fixed crawler list storage to preserve real line breaks across PrestaShop versions.
+
 ## [1.6.0] – 2026-06-07
 ### Added
 - Added banner `center` position in addition to `top` and `bottom`.

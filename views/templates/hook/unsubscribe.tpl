@@ -11,5 +11,5 @@
 *}
 
 <div class="update-cookies">
-<a href="{$link|escape:'htmlall':'UTF-8'}" title="Update your Cookie preferences" rel="noopener noreferrer nofollow">{l s='Update your Cookie preferences' mod='artcokiechoicespro'}</a>
+<a href="{$link|escape:'htmlall':'UTF-8'}" class="artcookie-preferences-link" title="Update your Cookie preferences" rel="noopener noreferrer nofollow" data-artcookie-preferences="1"><i class="fa fa-sliders" aria-hidden="true"></i> {l s='Update your Cookie preferences' mod='artcokiechoicespro'}</a>
 </div>
