@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c9ef2e832a342d03834041c7744d87ff'] = 'Bannière Cookiechoices PrestaShop (Loi sur les cookies de l\'UE) RGPD';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c1f78468b2319d5de7edf13009b00e8f'] = 'Outil gratuit de gestion des cookies : module PrestaShop simple affichant la bannière de la loi européenne sur les cookies basée sur Cookiechoices.org de Google. Mis à jour selon les nouvelles règles de 2022.';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_0266804ebcf8ecfb01f418fac76a7ada'] = 'Paramètres avancés mis à jour';

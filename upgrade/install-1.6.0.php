@@ -1,11 +1,11 @@
 <?php
 /**
- *  2009-2025 Tecnoacquisti.com
+ *  2009-2026 Tecnoacquisti.com
  *
  *  For support feel free to contact us on our website at http://www.arteinformatica.eu
  *
  *  @author    Arte e Informatica <shop@tecnoacquisti.com>
- *  @copyright 2009-2025 Arte e Informatica
+ *  @copyright 2009-2026 Arte e Informatica
  *  @license   One Paid Licence By WebSite Using This Module. No Rent. No Sell. No Share.
  *  @version   1.6.0
  */
@@ -53,11 +53,15 @@ function upgrade_module_1_6_0($object)
     }
 
     if (Configuration::get('ARTCOKIECHOICESPRO_CUSTOMIZE') === false) {
-        $ok = $ok && Configuration::updateValue('ARTCOKIECHOICESPRO_CUSTOMIZE', $customize);
+        if (!Configuration::updateValue('ARTCOKIECHOICESPRO_CUSTOMIZE', $customize)) {
+            $ok = false;
+        }
     }
 
     if (Configuration::get('ARTCOKIECHOICESPRO_SAVE_PREFS') === false) {
-        $ok = $ok && Configuration::updateValue('ARTCOKIECHOICESPRO_SAVE_PREFS', $save_preferences);
+        if (!Configuration::updateValue('ARTCOKIECHOICESPRO_SAVE_PREFS', $save_preferences)) {
+            $ok = false;
+        }
     }
 
     foreach (array_merge(['necessary'], $category_keys) as $category_key) {
@@ -70,32 +74,47 @@ function upgrade_module_1_6_0($object)
             $descriptions[$lang['id_lang']] = pSQL($category_defaults[$category_key]['description']);
         }
 
-        if ($category_key !== 'necessary' &&
-            Configuration::get('ARTCOKIECHOICESPRO_CAT_' . $config_key . '_ACTIVE') === false
+        if (
+            $category_key !== 'necessary'
+            && Configuration::get('ARTCOKIECHOICESPRO_CAT_' . $config_key . '_ACTIVE') === false
         ) {
-            $ok = $ok && Configuration::updateValue(
-                'ARTCOKIECHOICESPRO_CAT_' . $config_key . '_ACTIVE',
-                '1'
-            );
+            if (
+                !Configuration::updateValue(
+                    'ARTCOKIECHOICESPRO_CAT_' . $config_key . '_ACTIVE',
+                    '1'
+                )
+            ) {
+                $ok = false;
+            }
         }
 
         if (Configuration::get('ARTCOKIECHOICESPRO_CAT_' . $config_key . '_LABEL') === false) {
-            $ok = $ok && Configuration::updateValue(
-                'ARTCOKIECHOICESPRO_CAT_' . $config_key . '_LABEL',
-                $labels
-            );
+            if (
+                !Configuration::updateValue(
+                    'ARTCOKIECHOICESPRO_CAT_' . $config_key . '_LABEL',
+                    $labels
+                )
+            ) {
+                $ok = false;
+            }
         }
 
         if (Configuration::get('ARTCOKIECHOICESPRO_CAT_' . $config_key . '_DESC') === false) {
-            $ok = $ok && Configuration::updateValue(
-                'ARTCOKIECHOICESPRO_CAT_' . $config_key . '_DESC',
-                $descriptions
-            );
+            if (
+                !Configuration::updateValue(
+                    'ARTCOKIECHOICESPRO_CAT_' . $config_key . '_DESC',
+                    $descriptions
+                )
+            ) {
+                $ok = false;
+            }
         }
     }
 
     if (Configuration::get('ARTCOKIECHOICESPRO_POSITION') === false) {
-        $ok = $ok && Configuration::updateValue('ARTCOKIECHOICESPRO_POSITION', 'bottom');
+        if (!Configuration::updateValue('ARTCOKIECHOICESPRO_POSITION', 'bottom')) {
+            $ok = false;
+        }
     }
 
     return (bool) $ok;

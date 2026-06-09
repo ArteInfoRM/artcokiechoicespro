@@ -1,11 +1,11 @@
 <?php
 /**
- *  2009-2025 Tecnoacquisti.com
+ *  2009-2026 Tecnoacquisti.com
  *
  *  For support feel free to contact us on our website at http://www.tecnoacquisti.com
  *
  *  @author    Arte e Informatica <shop@tecnoacquisti.com>
- *  @copyright 2009-2025 Arte e Informatica
+ *  @copyright 2009-2026 Arte e Informatica
  *  @license   One Paid Licence By WebSite Using This Module. No Rent. No Sell. No Share.
  *  @version   1.6.1
  */
@@ -1300,7 +1300,7 @@ class ArtCokiechoicespro extends Module
             'art_accept_all_txt' => $art_accept_all_txt,
             'art_cookie_preferences_title' => $art_cookie_preferences_title,
             'art_disallow_link' => $art_disallow_link,
-            'art_cookie_categories_json' => $art_cookie_categories_json,
+            'art_cookie_categories_base64' => base64_encode($art_cookie_categories_json),
             ]);
 
         return $this->display(__FILE__, 'artcookiechoices.tpl');

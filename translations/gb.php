@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c9ef2e832a342d03834041c7744d87ff'] = 'PrestaShop Banner Cookiechoices (Eu Cookie Law) GDPR';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_c1f78468b2319d5de7edf13009b00e8f'] = 'Free Cookie Tool: simple PrestaShop module that displays the EU Cookie Law banner based on Google\'s Cookiechoices.org. Updated to new 2022 rules.';
 $_MODULE['<{artcokiechoicespro}prestashop>artcokiechoicespro_0266804ebcf8ecfb01f418fac76a7ada'] = 'Advanced settings updated';

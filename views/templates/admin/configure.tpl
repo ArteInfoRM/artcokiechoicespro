@@ -1,17 +1,17 @@
 {*
 **
-*  2009-2025 Tecnoacquisti.com
+*  2009-2026 Tecnoacquisti.com
 *
 *  For support feel free to contact us on our website at http://www.arteinformatica.eu
 *
 *  @author    Arte e Informatica <shop@tecnoacquisti.com>
-*  @copyright 2009-2025 Arte e Informatica
+*  @copyright 2009-2026 Arte e Informatica
 *  @version   1.0.0
 *  @license   One Paid Licence By WebSite Using This Module. No Rent. No Sell. No Share.
 *
 *}
 
-{* Alert iniziale *}
+{* Initial alert *}
 {include file='module:artcokiechoicespro/views/templates/admin/allert.tpl'}
 
 <ul class="nav nav-tabs" role="tablist">
@@ -35,11 +35,11 @@
 <!-- Tab panes -->
 <div class="tab-content">
   <div class="tab-pane {$active_1|escape:'htmlall':'UTF-8'}" id="template_1">
-    {$basic_setting}
+    {$basic_setting nofilter}
   </div>
 
   <div class="tab-pane {$active_2|escape:'htmlall':'UTF-8'}" id="template_2">
-    {$advanced_setting}
+    {$advanced_setting nofilter}
   </div>
 
   <div class="tab-pane" id="template_3">

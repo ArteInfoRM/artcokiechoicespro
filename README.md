@@ -1,115 +1,145 @@
 # Art Cookie Choices Pro
 
-ArtCookieChoicesPro is a free PrestaShop module developed by **Tecnoacquisti.com® / Arte e Informatica**, designed to manage a fully GDPR-compliant cookie banner, aligned with the latest guidelines of the Italian Data Protection Authority (Garante Privacy).
+Art Cookie Choices Pro is a PrestaShop module by Tecnoacquisti.com / Arte e
+Informatica for managing a GDPR-oriented cookie banner with granular consent
+preferences.
 
-The module is lightweight, fast, and does not rely on external libraries. It includes full integration with **Google Consent Mode v2** and **Microsoft UET Consent Mode**, ensuring compatibility with modern tracking requirements.
+The module is designed for PrestaShop 1.7, 8 and 9, including both Classic and
+Hummingbird-based themes. It supports Google Consent Mode v2 and Microsoft UET
+Consent Mode without requiring core overrides.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Built for PrestaShop](https://img.shields.io/badge/Built%20for-PrestaShop-DF0067?logo=prestashop&logoColor=white)
+## Features
 
----
-
-## 🚀 Features
-
-- GDPR-compliant cookie banner with **Accept**, **Reject**, and **Close (X)** actions.
-- No auto-accept behavior under any circumstance.
-- Proper handling of the `displayCookieConsent` cookie based on user choices.
-- Granular cookie preferences stored in `displayCookieConsentPreferences`.
-- Link/controller allowing users to **reopen cookie preferences** at any time.
-- Fully customizable text and behavior.
-- Banner position options: **top**, **bottom**, and **center**.
+- Cookie banner with accept, reject, customize and close actions.
+- Dedicated cookie preferences popup with category-level consent choices.
+- Footer link and customer account link to reopen cookie preferences.
+- Consent reset controller protected by module token.
+- Granular preferences stored in `displayCookieConsentPreferences`.
+- Backward-compatible consent flag stored in `displayCookieConsent`.
+- Configurable banner position: top, bottom or center.
 - Configurable optional cookie categories:
   - Functional cookies
   - Analytics cookies
   - Performance cookies
   - Advertising cookies
   - Other cookies
-- Support for:
-  - **Google Consent Mode v2**
-  - **Microsoft UET Consent Mode**
-- HTML and CSS fully overridable by theme.
-- No core modifications and full compatibility with PrestaShop caching systems.
+- Google Consent Mode v2 support.
+- Microsoft UET Consent Mode support.
+- SEO protection that hides cookie UI from configured crawler user agents.
+- Localized installation defaults for English, Italian, Spanish, French and German.
+- Theme-friendly markup and CSS, with a native account-page tile layout.
 
----
+## Compatibility
 
-## 🧩 PrestaShop Compatibility
+| PrestaShop version | Status |
+| --- | --- |
+| 1.7.8+ | Supported |
+| 8.x | Supported |
+| 9.x | Supported |
+| 1.6.x | Not supported |
 
-| PrestaShop Version | Supported |
-|--------------------|-----------|
-| 1.7.x              | ✔️ |
-| 8.x                | ✔️ |
-| 9.x                | ✔️ |
-| 1.6.x              | ❌ Removed |
+## Installation
 
----
+1. Download the release ZIP package.
+2. In the PrestaShop back office, open Modules > Module Manager.
+3. Upload and install the ZIP package.
+4. Configure banner copy, button labels, privacy link, categories and consent mode.
 
-## 📦 Installation
+Release ZIP files are built from Git tags and use the `artcokiechoicespro/`
+archive prefix, so the module extracts into the expected directory name.
 
-1. Download the latest release from the GitHub repository.
-2. Go to **Back Office → Modules → Upload a Module** and install the ZIP package.
-3. Configure banner text, buttons, and consent behavior.
-4. (Optional) Configure tracking scripts using Google Consent Mode v2 or Microsoft UET.
+## Cookie Preferences
 
----
+The customize button opens a dedicated preferences popup. Its footer includes:
 
-## 🔧 Configuration Options
+- Cancel: opens the consent reset controller.
+- Reject all: rejects all optional categories.
+- Accept selection: saves the selected categories.
+- Accept all: accepts every category.
 
-- Customizable banner text.
-- Translatable button labels.
-- Custom link to allow users to review/change preferences.
-- Optional cookie categories can be enabled or disabled from the module configuration.
-- Banner position can be set to top, bottom, or center.
-- Consent Mode signals for:
-  - `ad_storage`
-  - `analytics_storage`
-  - `ad_user_data`
-  - `ad_personalization`
-  - `functionality_storage`
-  - `personalization_storage`
-  - `security_storage`
-- Microsoft UET `ad_storage` is mapped to the advertising category.
+The footer and account-page links open the preferences popup instead of resetting
+cookies immediately. The reset controller remains available through the Cancel
+button inside the preferences popup.
 
----
+## Account Page Link
 
-## 🔐 Privacy & Legal Compliance
+The module registers `displayCustomerAccount` and adds a standard account-page
+tile. The tile uses the native PrestaShop account layout classes and a Material
+Icons icon for visual consistency with Classic and Hummingbird themes.
 
-- Designed according to GDPR and Italian Garante Privacy guidelines (2021 memo).
-- Reflects Google’s Consent Mode v2 obligations starting in 2024.
-- Ensures no tracking scripts are loaded unless the user provides explicit consent.
+## SEO Protection
 
----
+SEO protection is enabled by default. When the request user agent matches a
+configured crawler signature, the module does not render the banner, preferences
+popup, CSS, or preference links.
 
+The default crawler list includes:
 
----
+```text
+Googlebot
+Google-InspectionTool
+AdsBot-Google
+Mediapartners-Google
+bingbot
+BingPreview
+AdIdxBot
+MicrosoftPreview
+DuckDuckBot
+YandexBot
+Applebot
+facebookexternalhit
+facebot
+Twitterbot
+LinkedInBot
+Pinterestbot
+```
 
-## 🧩 Google Consent Mode v2 Integration
+The list accepts one signature per line. Comma-separated values are also
+accepted. Matching is case-insensitive.
 
-The module provides default Consent Mode v2 signals and updates them after user choices.
-Advertising consent controls `ad_storage`, `ad_user_data`, `ad_personalization`, and Microsoft UET `ad_storage`; analytics and performance consent control `analytics_storage`; functional consent controls `functionality_storage` and `personalization_storage`; necessary cookies keep `security_storage` granted.
+## Localized Defaults
 
----
+On installation, the module preconfigures banner text and the following labels
+for English, Italian, Spanish, French and German:
 
-## 📄 License
+- Privacy link text
+- Reject button text
+- Accept button text
+- Customize button text
+- Save preferences button text
 
-This module is released under the MIT License.
-You may freely use, modify, and distribute the software—even for commercial purposes—as long as the original copyright notice and license text are preserved.
+Any other active language falls back to English. Existing merchant-customized
+texts are not overwritten by upgrades.
 
-See the included LICENSE file for full terms.
+## Consent Mode Mapping
 
----
+Google Consent Mode v2 signals are updated after user choices:
 
-## 🤝 Support & Contributions
+- Advertising cookies: `ad_storage`, `ad_user_data`, `ad_personalization`
+- Analytics cookies: `analytics_storage`
+- Performance cookies: `analytics_storage`
+- Functional cookies: `functionality_storage`, `personalization_storage`
+- Necessary cookies: `security_storage`
 
-For help, bug reports or feature requests:
+Microsoft UET `ad_storage` is mapped to the advertising category.
 
-👉 **GitHub Issues:** https://github.com/ArteInfoRM/artcokiechoicespro/issues  
-👉 **Official website:** https://www.tecnoacquisti.com/
+## Release Notes
 
-Contributions and pull requests are welcome.
+Version `1.6.1` includes:
 
----
+- Cookie preferences popup redesign.
+- Account-page preferences tile.
+- SEO protection for crawler user agents.
+- Localized installation defaults for banner and button text.
+- Improved consent reset behavior.
+- Removal of the old documentation image asset.
+- Release archive cleanup through `.gitattributes`.
 
-## 🏷 Author
+## Support
 
-**Tecnoacquisti.com® – Arte e Informatica**  
-Experts in e-commerce development, PrestaShop modules and digital compliance solutions.
+- GitHub issues: https://github.com/ArteInfoRM/artcokiechoicespro/issues
+- Website: https://www.tecnoacquisti.com/
+
+## License
+
+See the included `LICENSE` file.

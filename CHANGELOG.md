@@ -11,6 +11,8 @@ All notable changes to this project are documented below.
 - Added localized default cookie link and button labels for English, Italian, Spanish, French and German.
 - Added a curated default crawler list for Google, Bing/Microsoft, DuckDuckGo, Yandex, Apple and social preview bots.
 - Fixed crawler list storage to preserve real line breaks across PrestaShop versions.
+- Updated the README with the current module behavior and setup notes.
+- Fixed additional PrestaShop Validator warnings for license headers, array syntax, upgrade compatibility and template escaping.
 
 ## [1.6.0] – 2026-06-07
 ### Added
