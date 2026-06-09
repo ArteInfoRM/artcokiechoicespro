@@ -21,7 +21,7 @@
 	</p>
 	<p>
 		<b>{l s='Consent Mode hook order' mod='artcokiechoicespro'}</b><br />
-		{l s='For Google Tag Assistant validation, keep this module before any GA4, Google Tag Manager, Google Ads or Conversion Linker module in the PrestaShop displayHeader/header hook order. Consent Mode defaults must run before any tag reads consent state.' mod='artcokiechoicespro'}
+		{l s='For Google Tag Assistant validation, keep this module before any GA4, Google Tag Manager, Google Ads or Conversion Linker module in the PrestaShop displayHeader hook order. Consent Mode defaults must run before any tag reads consent state.' mod='artcokiechoicespro'}
 	</p>
 	<p>
 		<b>&raquo; {l s='Other resources' mod='artcokiechoicespro'}:</b>

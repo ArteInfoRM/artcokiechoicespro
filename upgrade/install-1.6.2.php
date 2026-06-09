@@ -15,7 +15,7 @@ if (!defined('_PS_VERSION_')) {
 
 function upgrade_module_1_6_2($object)
 {
-    $ok = (bool) $object->registerHook('header');
+    $ok = (bool) $object->registerHook('displayHeader');
 
     if (Configuration::get('ARTCOKIECHOICESPRO_CONSENTMODE') === false) {
         $ok = $ok && Configuration::updateValue('ARTCOKIECHOICESPRO_CONSENTMODE', '1');

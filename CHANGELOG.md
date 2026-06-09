@@ -5,8 +5,8 @@ All notable changes to this project are documented below.
 
 ## [1.6.2] - 2026-06-09
 ### Added
-- Added an upgrade script to ensure the module is registered on the `header` hook for early Consent Mode defaults.
-- Added documentation about keeping the module before GA4, Google Tag Manager, Google Ads and Conversion Linker modules in the `displayHeader` / `header` hook order.
+- Added an upgrade script to ensure the module is registered on the `displayHeader` hook for early Consent Mode defaults.
+- Added documentation about keeping the module before GA4, Google Tag Manager, Google Ads and Conversion Linker modules in the `displayHeader` hook order.
 
 ### Changed
 - Enabled Consent Mode by default on new module installations.

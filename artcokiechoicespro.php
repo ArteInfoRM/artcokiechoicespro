@@ -99,7 +99,7 @@ class ArtCokiechoicespro extends Module
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_SEO_PROTECTION', '1')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_SEO_BOTS', $this->getDefaultSeoBotList())
             && $this->installCookieCategoryConfiguration($category_labels, $category_descriptions)
-            && $this->registerHook('header')
+            && $this->registerHook('displayHeader')
             && $this->registerHook('CookiesDisable')
             && $this->registerHook('displayFooterBefore')
             && $this->registerHook('displayFooter')
@@ -1306,7 +1306,7 @@ class ArtCokiechoicespro extends Module
         return $this->display(__FILE__, 'artcookiechoices.tpl');
     }
 
-    public function hookHeader($params)
+    public function hookDisplayHeader($params)
     {
         if ($this->isSeoBotRequest()) {
             return '';
