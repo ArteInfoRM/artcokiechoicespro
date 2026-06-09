@@ -35,7 +35,7 @@ Consent Mode without requiring core overrides.
 
 | PrestaShop version | Status |
 | --- | --- |
-| 1.7.8+ | Supported |
+| 1.7.x | Supported |
 | 8.x | Supported |
 | 9.x | Supported |
 | 1.6.x | Not supported |

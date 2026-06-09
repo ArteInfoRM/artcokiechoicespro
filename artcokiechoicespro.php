@@ -7,7 +7,7 @@
  *  @author    Arte e Informatica <shop@tecnoacquisti.com>
  *  @copyright 2009-2026 Arte e Informatica
  *  @license   One Paid Licence By WebSite Using This Module. No Rent. No Sell. No Share.
- *  @version   1.6.2
+ *  @version   1.6.3
  */
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -19,7 +19,7 @@ class ArtCokiechoicespro extends Module
     {
         $this->name = 'artcokiechoicespro';
         $this->tab = 'front_office_features';
-        $this->version = '1.6.2';
+        $this->version = '1.6.3';
         $this->author = 'Tecnoacquisti.com';
         $this->need_instance = 0;
 
@@ -30,7 +30,7 @@ class ArtCokiechoicespro extends Module
         $this->displayName = $this->l('PrestaShop Banner Cookiechoices (Eu Cookie Law) GDPR');
         $this->description = $this->l('Free Cookie Tool: simple PrestaShop module that displays the EU Cookie Law banner based on Google\'s Cookiechoices.org. Updated to new 2022 rules.');
 
-        $this->ps_versions_compliancy = ['min' => '1.7.8.0', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '1.7.0.0', 'max' => _PS_VERSION_];
     }
 
     public function install()

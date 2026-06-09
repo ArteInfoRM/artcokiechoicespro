@@ -3,6 +3,11 @@ All notable changes to this project are documented below.
 
 ---
 
+## [1.6.3] - 2026-06-09
+### Changed
+- Lowered the minimum declared PrestaShop compatibility from 1.7.8.0 to 1.7.0.0.
+- Updated compatibility documentation to include all PrestaShop 1.7.x versions.
+
 ## [1.6.2] - 2026-06-09
 ### Added
 - Added an upgrade script to ensure the module is registered on the `displayHeader` hook for early Consent Mode defaults.

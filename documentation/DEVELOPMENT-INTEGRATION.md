@@ -16,11 +16,11 @@ The module is intentionally lightweight:
 
 ## Compatibility
 
-Minimum supported PrestaShop version: `1.7.8.0`.
+Minimum supported PrestaShop version: `1.7.0.0`.
 
 Supported major versions:
 
-- PrestaShop 1.7.8.x
+- PrestaShop 1.7.x
 - PrestaShop 8.x
 - PrestaShop 9.x
 
@@ -255,7 +255,7 @@ Follow these rules when changing the module:
 
 Follow the workspace PrestaShop coding standards:
 
-- PHP compatible with PrestaShop 1.7.8+.
+- PHP compatible with PrestaShop 1.7+.
 - No PS9-only type hints in legacy paths.
 - Short array syntax.
 - No blank line after PHPDoc when validator flags it.
