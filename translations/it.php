@@ -111,6 +111,8 @@ $_MODULE['<{artcokiechoicespro}prestashop>documentation_e5498869ef6c174d73dfb149
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_4042d19cd653c2f8ac293611f51cb28d'] = 'Le leggi europee richiedono che gli editori digitali forniscano ai visitatori dei loro siti e app informazioni sull\'uso dei cookie e di altre forme di archiviazione locale. In molti casi queste leggi richiedono anche l\'ottenimento del consenso.';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_1610d8be73892259ca80313773aa35e0'] = 'Link per cambio preferenze';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_0feeb0df161d95b958cc3732e322b50d'] = 'Questo link concederà il diritto di revocare il proprio consenso ai tuoi clienti. Puoi incollare questo URL sul tuo CMS. I tuoi utenti saranno in grado di pulire tutti i cookie tranne quelli di Prestashop.';
+$_MODULE['<{artcokiechoicespro}prestashop>documentation_3403d242aaaf9f6196213626ca431dc9'] = 'Ordine hook Consent Mode';
+$_MODULE['<{artcokiechoicespro}prestashop>documentation_8037840e9297fc151ceaf844d3c1a518'] = 'Per la validazione con Google Tag Assistant, mantieni questo modulo prima di qualsiasi modulo GA4, Google Tag Manager, Google Ads o Conversion Linker nell\'ordine hook PrestaShop displayHeader/header. I valori predefiniti di Consent Mode devono essere eseguiti prima che qualsiasi tag legga lo stato del consenso.';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_4c7d5d7dfde4a7bd82b54348182043d3'] = 'Altre risorse';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_2eb9d91eca6bf8f6431108fc1642d88b'] = 'Il nostro profilo su PrestaShop Addons';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_8f11b46f95d3231abaaf6429076cf5fe'] = 'Scopri i nostri moduli e servizi';

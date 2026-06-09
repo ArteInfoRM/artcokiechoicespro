@@ -136,9 +136,15 @@ Google Consent Mode v2 signals are updated after user choices:
 
 Microsoft UET `ad_storage` is mapped to the advertising category.
 
+For Google Tag Assistant validation, keep Art Cookie Choices Pro before any
+GA4, Google Tag Manager, Google Ads or Conversion Linker module in the
+PrestaShop `displayHeader` / `header` hook order. The module sets Consent Mode
+defaults in the header, and Google requires those defaults to run before any tag
+reads consent state.
+
 ## Release Notes
 
-Version `1.6.1` includes:
+Version `1.6.2` includes:
 
 - Cookie preferences popup redesign.
 - Account-page preferences tile.
@@ -146,6 +152,10 @@ Version `1.6.1` includes:
 - Localized installation defaults for banner and button text.
 - Completed module translation keys across bundled languages.
 - Validator-oriented documentation for trusted Back Office HelperForm markup.
+- Early Consent Mode defaults in the header to avoid late-default warnings in
+  Google Tag Assistant.
+- Consent Mode enabled by default on new module installations.
+- Upgrade registration for the `header` hook when needed.
 - Improved consent reset behavior.
 - Removal of the old documentation image asset.
 - Release archive cleanup through `.gitattributes`.

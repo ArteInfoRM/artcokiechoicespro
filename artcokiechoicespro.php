@@ -7,7 +7,7 @@
  *  @author    Arte e Informatica <shop@tecnoacquisti.com>
  *  @copyright 2009-2026 Arte e Informatica
  *  @license   One Paid Licence By WebSite Using This Module. No Rent. No Sell. No Share.
- *  @version   1.6.1
+ *  @version   1.6.2
  */
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -19,7 +19,7 @@ class ArtCokiechoicespro extends Module
     {
         $this->name = 'artcokiechoicespro';
         $this->tab = 'front_office_features';
-        $this->version = '1.6.1';
+        $this->version = '1.6.2';
         $this->author = 'Tecnoacquisti.com';
         $this->need_instance = 0;
 
@@ -76,7 +76,7 @@ class ArtCokiechoicespro extends Module
 
         return parent::install()
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_ACTIVE', '1')
-            && Configuration::updateValue(Tools::strtoupper($this->name) . '_CONSENTMODE', '0')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_CONSENTMODE', '1')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_EXTACTIVE', '0')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_PRIVACY_CMS', '0')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_BANNER_COLOR', '#000000')
@@ -1325,6 +1325,14 @@ class ArtCokiechoicespro extends Module
         $artcookies_tbutton = Configuration::get(Tools::strtoupper($this->name . '_BTEXT_COLOR'));
         $artloadjs = Configuration::get(Tools::strtoupper($this->name . '_LOADKJS'));
         $artcookies_position = Configuration::get(Tools::strtoupper($this->name . '_POSITION'));
+        $art_consentmode = (int) Configuration::get(Tools::strtoupper($this->name . '_CONSENTMODE'));
+        $art_cookie_categories_json = json_encode(
+            $this->getCookieCategoriesForFront((int) $this->context->language->id)
+        );
+
+        if ($art_cookie_categories_json === false) {
+            $art_cookie_categories_json = '[]';
+        }
 
         $this->smarty->assign([
             'artcookies_bcolor' => $artcookies_bcolor,
@@ -1336,6 +1344,8 @@ class ArtCokiechoicespro extends Module
             'arturi' => pSQL($arturi),
             'artcookies_tbutton' => $artcookies_tbutton,
             'artcookies_position' => $artcookies_position,
+            'art_consentmode' => $art_consentmode,
+            'art_cookie_categories_base64' => base64_encode($art_cookie_categories_json),
             ]);
 
         return $this->display(__FILE__, 'artcookiesheader.tpl');

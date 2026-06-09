@@ -111,6 +111,8 @@ $_MODULE['<{artcokiechoicespro}prestashop>documentation_e5498869ef6c174d73dfb149
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_4042d19cd653c2f8ac293611f51cb28d'] = 'Europäische Gesetze verlangen, dass digitale Anbieter Besucher ihrer Websites und Apps über die Verwendung von Cookies und anderen Formen der lokalen Speicherung informieren. In vielen Fällen verlangen diese Gesetze auch die Einholung der Zustimmung.';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_1610d8be73892259ca80313773aa35e0'] = 'URL zum Widerruf';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_0feeb0df161d95b958cc3732e322b50d'] = 'Dieser Link ermöglicht Ihren Kunden, ihre Einwilligung zu widerrufen. Sie können diese URL in Ihr CMS einfügen. Ihre Nutzer können alle Cookies außer den Prestashop-Cookies löschen.';
+$_MODULE['<{artcokiechoicespro}prestashop>documentation_3403d242aaaf9f6196213626ca431dc9'] = 'Consent Mode Hook-Reihenfolge';
+$_MODULE['<{artcokiechoicespro}prestashop>documentation_8037840e9297fc151ceaf844d3c1a518'] = 'Fuer die Validierung mit Google Tag Assistant muss dieses Modul in der PrestaShop Hook-Reihenfolge displayHeader/header vor jedem GA4-, Google Tag Manager-, Google Ads- oder Conversion Linker-Modul stehen. Die Consent Mode Standardwerte muessen ausgefuehrt werden, bevor ein Tag den Zustimmungsstatus liest.';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_4c7d5d7dfde4a7bd82b54348182043d3'] = 'Weitere Ressourcen';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_2eb9d91eca6bf8f6431108fc1642d88b'] = 'Entwickler-Community';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_8f11b46f95d3231abaaf6429076cf5fe'] = 'Tecnoacquisti.com';

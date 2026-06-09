@@ -15,6 +15,89 @@
 <script src="{/literal}{$arturi|escape:'htmlall':'UTF-8'}{literal}modules/artcokiechoicespro/views/js/jquery-1.11.0.min.js"></script>
 {/literal}
 {/if}
+{if $art_consentmode|intval == 1}
+<script>
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function() {ldelim}
+    window.dataLayer.push(arguments);
+  {rdelim};
+  (function() {ldelim}
+    var categories = [];
+    var preferences = null;
+    var googleConsent = {ldelim}
+      ad_storage: 'denied',
+      analytics_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      functionality_storage: 'denied',
+      personalization_storage: 'denied',
+      security_storage: 'granted'
+    {rdelim};
+    var microsoftConsent = {ldelim}
+      ad_storage: 'denied'
+    {rdelim};
+
+    function readCookie(name) {ldelim}
+      var parts = document.cookie ? document.cookie.split(';') : [];
+      var prefix = name + '=';
+      var value;
+
+      for (var index = 0; index < parts.length; index++) {ldelim}
+        value = parts[index].replace(/^\s+/, '');
+
+        if (value.indexOf(prefix) === 0) {ldelim}
+          return decodeURIComponent(value.substring(prefix.length));
+        {rdelim}
+      {rdelim}
+
+      return null;
+    {rdelim}
+
+    function setConsentValue(consent, key, state) {ldelim}
+      if (state === 'granted' || consent[key] !== 'granted') {ldelim}
+        consent[key] = state;
+      {rdelim}
+    {rdelim}
+
+    try {ldelim}
+      categories = JSON.parse(window.atob('{$art_cookie_categories_base64|escape:'javascript':'UTF-8'}'));
+    {rdelim} catch (error) {ldelim}
+      categories = [];
+    {rdelim}
+
+    try {ldelim}
+      preferences = JSON.parse(readCookie('displayCookieConsentPreferences'));
+    {rdelim} catch (error) {ldelim}
+      preferences = null;
+    {rdelim}
+
+    if (!preferences) {ldelim}
+      preferences = {ldelim}
+        necessary: true
+      {rdelim};
+    {rdelim}
+
+    for (var categoryIndex = 0; categoryIndex < categories.length; categoryIndex++) {ldelim}
+      var category = categories[categoryIndex];
+      var state = preferences[category.key] ? 'granted' : 'denied';
+      var googleKeys = category.google || [];
+      var microsoftKeys = category.microsoft || [];
+
+      for (var googleIndex = 0; googleIndex < googleKeys.length; googleIndex++) {ldelim}
+        setConsentValue(googleConsent, googleKeys[googleIndex], state);
+      {rdelim}
+
+      for (var microsoftIndex = 0; microsoftIndex < microsoftKeys.length; microsoftIndex++) {ldelim}
+        setConsentValue(microsoftConsent, microsoftKeys[microsoftIndex], state);
+      {rdelim}
+    {rdelim}
+
+    window.gtag('consent', 'default', googleConsent);
+    window.uetq = window.uetq || [];
+    window.uetq.push('consent', 'default', microsoftConsent);
+  {rdelim}());
+</script>
+{/if}
 <style type="text/css">
 #cookieChoiceInfo {ldelim}
 		background-color: {$artcookies_bcolor|escape:'htmlall':'UTF-8'} !important;

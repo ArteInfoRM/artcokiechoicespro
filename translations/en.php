@@ -111,6 +111,8 @@ $_MODULE['<{artcokiechoicespro}prestashop>documentation_e5498869ef6c174d73dfb149
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_4042d19cd653c2f8ac293611f51cb28d'] = 'European laws require that digital publishers give visitors to their sites and apps information about their use of cookies and other forms of local storage. In many cases these laws also require that consent be obtained.';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_1610d8be73892259ca80313773aa35e0'] = 'Disallow URL';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_0feeb0df161d95b958cc3732e322b50d'] = 'This link will grant the right of revoke their consent to your customers. You can paste this url on your CMS. Your users will be able to clean all cookies except Prestashop ones.';
+$_MODULE['<{artcokiechoicespro}prestashop>documentation_3403d242aaaf9f6196213626ca431dc9'] = 'Consent Mode hook order';
+$_MODULE['<{artcokiechoicespro}prestashop>documentation_8037840e9297fc151ceaf844d3c1a518'] = 'For Google Tag Assistant validation, keep this module before any GA4, Google Tag Manager, Google Ads or Conversion Linker module in the PrestaShop displayHeader/header hook order. Consent Mode defaults must run before any tag reads consent state.';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_4c7d5d7dfde4a7bd82b54348182043d3'] = 'Other resources';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_2eb9d91eca6bf8f6431108fc1642d88b'] = 'Community developer';
 $_MODULE['<{artcokiechoicespro}prestashop>documentation_8f11b46f95d3231abaaf6429076cf5fe'] = 'Tecnoacquisti.com';

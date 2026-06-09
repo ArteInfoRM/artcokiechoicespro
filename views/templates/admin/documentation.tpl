@@ -20,6 +20,10 @@
 	&raquo; {l s='This link will grant the right of revoke their consent to your customers. You can paste this url on your CMS. Your users will be able to clean all cookies except Prestashop ones.' mod='artcokiechoicespro'}
 	</p>
 	<p>
+		<b>{l s='Consent Mode hook order' mod='artcokiechoicespro'}</b><br />
+		{l s='For Google Tag Assistant validation, keep this module before any GA4, Google Tag Manager, Google Ads or Conversion Linker module in the PrestaShop displayHeader/header hook order. Consent Mode defaults must run before any tag reads consent state.' mod='artcokiechoicespro'}
+	</p>
+	<p>
 		<b>&raquo; {l s='Other resources' mod='artcokiechoicespro'}:</b>
 		<ul>
 			<li><a href="https://addons.prestashop.com/it/190_arte-informatica" target="blank">{l s='Community developer' mod='artcokiechoicespro'}</a></li>
