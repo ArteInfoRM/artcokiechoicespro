@@ -39,16 +39,17 @@
 
 <!-- Tab panes -->
 <div class="tab-content">
+  {* HelperForm returns trusted Back Office HTML generated from server-side field definitions. *}
   <div class="tab-pane {$active_1|escape:'htmlall':'UTF-8'}" id="template_1">
-    {$basic_setting}
+    {$basic_setting nofilter}
   </div>
 
   <div class="tab-pane {$active_2|escape:'htmlall':'UTF-8'}" id="template_2">
-    {$advanced_setting}
+    {$advanced_setting nofilter}
   </div>
 
   <div class="tab-pane {$active_3|escape:'htmlall':'UTF-8'}" id="template_3">
-    {$consent_log_setting}
+    {$consent_log_setting nofilter}
     {include file='module:artcokiechoicespro/views/templates/admin/consent-export.tpl'}
   </div>
 
