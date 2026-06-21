@@ -10,11 +10,6 @@
 *
 *}
 
-{if $artloadjs==1}
-{literal}
-<script src="{/literal}{$arturi|escape:'htmlall':'UTF-8'}{literal}modules/artcokiechoicespro/views/js/jquery-1.11.0.min.js"></script>
-{/literal}
-{/if}
 {if $art_consentmode|intval == 1}
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -24,6 +19,8 @@
   (function() {ldelim}
     var categories = [];
     var preferences = null;
+    var consentVersion = '{$art_consent_version|escape:'javascript':'UTF-8'}';
+    var storedConsentVersion = null;
     var googleConsent = {ldelim}
       ad_storage: 'denied',
       analytics_storage: 'denied',
@@ -66,7 +63,10 @@
     {rdelim}
 
     try {ldelim}
-      preferences = JSON.parse(readCookie('displayCookieConsentPreferences'));
+      storedConsentVersion = readCookie('displayCookieConsentVersion');
+      if (storedConsentVersion === consentVersion) {ldelim}
+        preferences = JSON.parse(readCookie('displayCookieConsentPreferences'));
+      {rdelim}
     {rdelim} catch (error) {ldelim}
       preferences = null;
     {rdelim}

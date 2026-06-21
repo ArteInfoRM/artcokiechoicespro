@@ -218,6 +218,56 @@
 	justify-content: flex-end;
 }
 
+.artcookie-consent-export-page .artcookie-consent-export-help {
+	margin: 0 0 12px;
+}
+
+.artcookie-consent-export-page .artcookie-consent-export-form {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 10px 14px;
+	align-items: center;
+	margin: 0;
+}
+
+.artcookie-consent-export-page .artcookie-consent-export-form .form-group {
+	display: inline-flex;
+	align-items: center;
+	margin: 0;
+}
+
+.artcookie-consent-export-page .artcookie-consent-export-form label {
+	margin: 0 8px 0 0;
+	white-space: nowrap;
+}
+
+.artcookie-consent-export-page .artcookie-consent-export-form .form-control {
+	height: 38px;
+}
+
+.artcookie-consent-export-page .artcookie-consent-export-format {
+	min-width: 92px;
+}
+
+.artcookie-consent-export-page .artcookie-consent-export-date {
+	min-width: 142px;
+}
+
+.artcookie-consent-export-page .artcookie-consent-export-action {
+	min-width: 150px;
+}
+
+.artcookie-consent-export-page .artcookie-consent-export-button {
+	height: 38px;
+	padding: 8px 16px;
+}
+
+textarea.artcookie-banner-textarea,
+textarea[name^="ARTCOKIECHOICESPRO_TEXT"],
+iframe[id^="ARTCOKIECHOICESPRO_TEXT_"][id$="_ifr"] {
+	min-height: 150px;
+}
+
 #InformativaPreferencesModal .artcookie-modal-button {
 	display: inline-block;
 	margin: 0;
@@ -228,6 +278,21 @@
 
 #InformativaPreferencesModal .artcookie-modal-button:hover {
 	text-decoration: none;
+}
+
+#cookieChoiceInfo a:focus,
+#cookieChoiceInfo #close_cookie_block:focus,
+#InformativaPreferencesModal a:focus,
+#InformativaPreferencesModal input:focus,
+#InformativaPreferencesModal .artcookie-preferences-dialog:focus {
+	outline: 2px solid #fff;
+	outline-offset: 3px;
+}
+
+#InformativaPreferencesModal a:focus,
+#InformativaPreferencesModal input:focus,
+#InformativaPreferencesModal .artcookie-preferences-dialog:focus {
+	outline-color: #222;
 }
 
 #InformativaPreferencesModal #InformativaCancelPreferences {

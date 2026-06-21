@@ -22,6 +22,7 @@
   var cookieChoices = (function () {
     var cookieName = "displayCookieConsent";
     var preferencesCookieName = "displayCookieConsentPreferences";
+    var consentVersionCookieName = "displayCookieConsentVersion";
     var cookieConsentId = "cookieChoiceInfo";
     var acceptLinkId = "InformativaAccetto";
     var rejectLinkId = "InformativaReject";
@@ -34,8 +35,21 @@
     var closeCookieBlock = "close_cookie_block";
     var currentCategories = [];
     var consentModeEnabled = false;
+    var consentLogEnabled = false;
+    var consentLogUrl = "";
+    var consentLogToken = "";
     var currentDisallowUrl = "#";
+    var currentConsentVersion = "1";
     var preferencesOpenedAt = 0;
+    var lastFocusedElement = null;
+    var focusableSelector = [
+      "a[href]",
+      "button:not([disabled])",
+      "input:not([disabled])",
+      "select:not([disabled])",
+      "textarea:not([disabled])",
+      "[tabindex]:not([tabindex=\"-1\"])"
+    ].join(",");
 
     function _setElementText(element, text) {
       if (supportsTextContent) {
@@ -149,6 +163,7 @@
       dialog.setAttribute("role", "dialog");
       dialog.setAttribute("aria-modal", "true");
       dialog.setAttribute("aria-labelledby", "InformativaPreferencesTitle");
+      dialog.setAttribute("tabindex", "-1");
 
       header.className = "artcookie-preferences-header";
       title.id = "InformativaPreferencesTitle";
@@ -209,7 +224,11 @@
       cookieConsentElement.id = cookieConsentId;
       closeButtonContainer.id = closeCookieBlock;
       closeButtonContainer.style.cssText = "float: right;cursor: pointer;";
+      closeButtonContainer.setAttribute("role", "button");
+      closeButtonContainer.setAttribute("tabindex", "0");
+      closeButtonContainer.setAttribute("aria-label", "Reject optional cookies and close");
       closeButtonIcon.classList.add("material-icons");
+      closeButtonIcon.setAttribute("aria-hidden", "true");
       closeButtonIcon.textContent = "close";
 
       closeButtonContainer.appendChild(closeButtonIcon);
@@ -316,19 +335,39 @@
       if (overlay) {
         overlay.setAttribute("aria-hidden", "true");
       }
+
+      if (
+        lastFocusedElement &&
+        document.body.contains(lastFocusedElement) &&
+        typeof lastFocusedElement.focus === "function"
+      ) {
+        lastFocusedElement.focus();
+      }
     }
 
     function _openPreferencesModal() {
       var modal = document.getElementById(preferencesModalId);
       var overlay = document.getElementById(preferencesOverlayId);
+      var dialog;
+      var focusableElements;
 
       if (!modal || !overlay) {
         return false;
       }
 
+      lastFocusedElement = document.activeElement;
       modal.setAttribute("aria-hidden", "false");
       overlay.setAttribute("aria-hidden", "false");
       preferencesOpenedAt = new Date().getTime();
+      dialog = modal.querySelector(".artcookie-preferences-dialog");
+      focusableElements = modal.querySelectorAll(focusableSelector);
+
+      if (focusableElements.length > 0) {
+        focusableElements[0].focus();
+      } else if (dialog && typeof dialog.focus === "function") {
+        dialog.focus();
+      }
+
       return true;
     }
 
@@ -379,8 +418,16 @@
       }
     }
 
+    function _getStoredConsentVersion() {
+      return _getCookieValue(consentVersionCookieName);
+    }
+
+    function _isCurrentConsentVersion() {
+      return _getStoredConsentVersion() === currentConsentVersion;
+    }
+
     function _shouldDisplayConsent() {
-      return !_getStoredPreference();
+      return !_getStoredPreference() || !_isCurrentConsentVersion();
     }
 
     function _buildPreferenceMap(categories, accepted) {
@@ -412,11 +459,11 @@
       var storedPreferences = _getStoredPreferences();
       var storedPreference = _getStoredPreference();
 
-      if (storedPreferences) {
+      if (storedPreferences && _isCurrentConsentVersion()) {
         return storedPreferences;
       }
 
-      if (storedPreference === "y") {
+      if (storedPreference === "y" && _isCurrentConsentVersion()) {
         return _buildPreferenceMap(categories, true);
       }
 
@@ -530,17 +577,49 @@
 
     function _writeCookie(name, value) {
       var expiryDate = new Date();
-      expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+      var attributes = "; path=/; SameSite=Lax";
+
+      expiryDate.setMonth(expiryDate.getMonth() + 6);
+
+      if (window.location && window.location.protocol === "https:") {
+        attributes += "; Secure";
+      }
+
       document.cookie =
         name +
         "=" +
         encodeURIComponent(value) +
         "; expires=" +
-        expiryDate.toGMTString() +
-        "; path=/";
+        expiryDate.toUTCString() +
+        attributes;
     }
 
-    function _savePreferences(preferences) {
+    function _sendConsentLog(preferences, action) {
+      var request;
+      var params;
+
+      if (!consentLogEnabled || !consentLogUrl) {
+        return;
+      }
+
+      try {
+        request = new XMLHttpRequest();
+        params = [
+          "token=" + encodeURIComponent(consentLogToken),
+          "action=" + encodeURIComponent(action),
+          "consent_version=" + encodeURIComponent(currentConsentVersion),
+          "preferences=" + encodeURIComponent(JSON.stringify(preferences))
+        ].join("&");
+
+        request.open("POST", consentLogUrl, true);
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        request.send(params);
+      } catch (e) {
+        return;
+      }
+    }
+
+    function _savePreferences(preferences, action) {
       var accepted = false;
 
       for (var key in preferences) {
@@ -552,10 +631,15 @@
       _applyConsent(preferences, true);
       _writeCookie(cookieName, accepted ? "y" : "n");
       _writeCookie(preferencesCookieName, JSON.stringify(preferences));
+      _writeCookie(consentVersionCookieName, currentConsentVersion);
+      _sendConsentLog(preferences, action || "save_selection");
     }
 
     function _saveUserPreference(preference) {
-      _savePreferences(_buildPreferenceMap(currentCategories, preference === "y"));
+      _savePreferences(
+        _buildPreferenceMap(currentCategories, preference === "y"),
+        preference === "y" ? "accept_all" : "reject_all"
+      );
     }
 
     function _acceptLinkClick() {
@@ -573,7 +657,7 @@
     }
 
     function _savePreferencesClick() {
-      _savePreferences(_getPreferencesFromInputs(currentCategories));
+      _savePreferences(_getPreferencesFromInputs(currentCategories), "save_selection");
       _removeCookieConsent();
       _closePreferencesModal();
       return false;
@@ -595,11 +679,19 @@
       titleText,
       disallowUrl,
       categories,
-      enableConsentMode
+      enableConsentMode,
+      consentVersion,
+      enableConsentLog,
+      logUrl,
+      logToken
     ) {
       currentCategories = _normalizeCategories(categories);
       consentModeEnabled = !!enableConsentMode;
+      consentLogEnabled = !!enableConsentLog;
+      consentLogUrl = logUrl || "";
+      consentLogToken = logToken || "";
       currentDisallowUrl = disallowUrl || "#";
+      currentConsentVersion = consentVersion || "1";
       _applyConsent(_getEffectivePreferences(currentCategories), false);
 
       if (currentCategories.length > 0) {
@@ -662,7 +754,11 @@
       titleText,
       disallowUrl,
       categories,
-      enableConsentMode
+      enableConsentMode,
+      consentVersion,
+      enableConsentLog,
+      logUrl,
+      logToken
     ) {
       _showCookieConsent(
         cookieText,
@@ -680,7 +776,11 @@
         titleText || "Cookie preferences",
         disallowUrl || "#",
         categories || [],
-        enableConsentMode
+        enableConsentMode,
+        consentVersion || "1",
+        enableConsentLog,
+        logUrl || "",
+        logToken || ""
       );
     }
 
@@ -699,7 +799,11 @@
       titleText,
       disallowUrl,
       categories,
-      enableConsentMode
+      enableConsentMode,
+      consentVersion,
+      enableConsentLog,
+      logUrl,
+      logToken
     ) {
       _showCookieConsent(
         cookieText,
@@ -717,8 +821,45 @@
         titleText || "Cookie preferences",
         disallowUrl || "#",
         categories || [],
-        enableConsentMode
+        enableConsentMode,
+        consentVersion || "1",
+        enableConsentLog,
+        logUrl || "",
+        logToken || ""
       );
+    }
+
+    function _trapModalFocus(event) {
+      var modal = document.getElementById(preferencesModalId);
+      var focusableElements;
+      var firstElement;
+      var lastElement;
+
+      if (
+        !modal ||
+        modal.getAttribute("aria-hidden") !== "false" ||
+        event.key !== "Tab"
+      ) {
+        return;
+      }
+
+      focusableElements = modal.querySelectorAll(focusableSelector);
+
+      if (!focusableElements.length) {
+        event.preventDefault();
+        return;
+      }
+
+      firstElement = focusableElements[0];
+      lastElement = focusableElements[focusableElements.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
     }
 
     document.addEventListener("click", function (event) {
@@ -783,6 +924,30 @@
         target.id === closeCookieBlock ||
         (typeof target.closest === "function" &&
           target.closest("#" + closeCookieBlock))
+      ) {
+        event.preventDefault();
+        _rejectLinkClick();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      var target = event.target;
+
+      if (event.key === "Escape") {
+        _closePreferencesModal();
+        return;
+      }
+
+      _trapModalFocus(event);
+
+      if (
+        target &&
+        (
+          target.id === closeCookieBlock ||
+          (typeof target.closest === "function" &&
+            target.closest("#" + closeCookieBlock))
+        ) &&
+        (event.key === "Enter" || event.key === " ")
       ) {
         event.preventDefault();
         _rejectLinkClick();

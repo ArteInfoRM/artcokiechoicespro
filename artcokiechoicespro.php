@@ -7,7 +7,7 @@
  *  @author    Arte e Informatica <shop@tecnoacquisti.com>
  *  @copyright 2009-2026 Arte e Informatica
  *  @license   One Paid Licence By WebSite Using This Module. No Rent. No Sell. No Share.
- *  @version   1.6.3
+ *  @version   1.6.4
  */
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -19,7 +19,7 @@ class ArtCokiechoicespro extends Module
     {
         $this->name = 'artcokiechoicespro';
         $this->tab = 'front_office_features';
-        $this->version = '1.6.3';
+        $this->version = '1.6.4';
         $this->author = 'Tecnoacquisti.com';
         $this->need_instance = 0;
 
@@ -43,7 +43,6 @@ class ArtCokiechoicespro extends Module
         $artcookies_reject = [];
         $artcookies_customize = [];
         $artcookies_save_preferences = [];
-        $category_defaults = $this->getDefaultCookieCategoryTexts();
         $category_labels = [];
         $category_descriptions = [];
         $privacy_notice_texts = $this->getDefaultPrivacyNoticeTexts();
@@ -66,7 +65,7 @@ class ArtCokiechoicespro extends Module
             $artcookies_customize[$lang['id_lang']] = pSQL($interface_text['customize']);
             $artcookies_save_preferences[$lang['id_lang']] = pSQL($interface_text['save_preferences']);
 
-            foreach ($category_defaults as $category_key => $category_default) {
+            foreach ($this->getDefaultCookieCategoryTexts() as $category_key => $category_default) {
                 $category_labels[$category_key][$lang['id_lang']] = pSQL($category_default['label']);
                 $category_descriptions[$category_key][$lang['id_lang']] = pSQL($category_default['description']);
             }
@@ -77,6 +76,10 @@ class ArtCokiechoicespro extends Module
         return parent::install()
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_ACTIVE', '1')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_CONSENTMODE', '1')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_CONSENT_VERSION', '1')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_AUTO_CONSENT_VERSION', '1')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_CONSENT_LOG', '0')
+            && Configuration::updateValue(Tools::strtoupper($this->name) . '_CONSENT_LOG_RETENTION', '12')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_EXTACTIVE', '0')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_PRIVACY_CMS', '0')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_BANNER_COLOR', '#000000')
@@ -93,11 +96,12 @@ class ArtCokiechoicespro extends Module
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_CUSTOMIZE', $artcookies_customize)
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_SAVE_PREFS', $artcookies_save_preferences)
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_TARGET', '_self')
-            && Configuration::updateValue(Tools::strtoupper($this->name) . '_LOADKJS', '0')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_POSITION', 'bottom')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_REVOKE', '0')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_SEO_PROTECTION', '1')
             && Configuration::updateValue(Tools::strtoupper($this->name) . '_SEO_BOTS', $this->getDefaultSeoBotList())
+            && $this->installConsentLogTable()
+            && $this->installConsentExportTab()
             && $this->installCookieCategoryConfiguration($category_labels, $category_descriptions)
             && $this->registerHook('displayHeader')
             && $this->registerHook('CookiesDisable')
@@ -111,6 +115,10 @@ class ArtCokiechoicespro extends Module
     {
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_ACTIVE');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_CONSENTMODE');
+        Configuration::deleteByName(Tools::strtoupper($this->name) . '_CONSENT_VERSION');
+        Configuration::deleteByName(Tools::strtoupper($this->name) . '_AUTO_CONSENT_VERSION');
+        Configuration::deleteByName(Tools::strtoupper($this->name) . '_CONSENT_LOG');
+        Configuration::deleteByName(Tools::strtoupper($this->name) . '_CONSENT_LOG_RETENTION');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_EXTACTIVE');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_PRIVACY_CMS');
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_BANNER_COLOR');
@@ -136,6 +144,9 @@ class ArtCokiechoicespro extends Module
         Configuration::deleteByName(Tools::strtoupper($this->name) . '_SEO_BOTS');
         $this->deleteCookieCategoryConfiguration();
 
+        $this->deleteConsentLogTable();
+        $this->uninstallConsentExportTab();
+
         return parent::uninstall();
     }
 
@@ -146,11 +157,17 @@ class ArtCokiechoicespro extends Module
     {
         $output = null;
         $outputadv = null;
+        $output_consent_log = null;
         $active_1 = 'active';
         $active_2 = '';
+        $active_3 = '';
+        $active_4 = '';
+        $this->installConsentExportTab();
+        $this->context->controller->addCSS($this->_path . '/views/css/artcookiechoicespro.css', 'all');
         $this->context->smarty->assign('module_dir', $this->_path);
         $basic_setting = $this->renderForm();
         $advanced_setting = $this->renderAdvForm();
+        $consent_log_setting = $this->renderConsentLogForm();
 
         $useSsl = (bool) Configuration::get('PS_SSL_ENABLED_EVERYWHERE') || (bool) Configuration::get('PS_SSL_ENABLED');
         $shop_base_url = $this->context->link->getBaseLink((int) $this->context->shop->id, $useSsl);
@@ -167,12 +184,12 @@ class ArtCokiechoicespro extends Module
             $artcookies_button = Tools::getValue('ARTCOKIECHOICESPRO_BUTTON_COLOR');
             $artcookies_shadow = Tools::getValue('ARTCOKIECHOICESPRO_SHADOW');
             $artcookies_tbutton = Tools::getValue('ARTCOKIECHOICESPRO_BTEXT_COLOR');
-            $artloadjs = Tools::getValue('ARTCOKIECHOICESPRO_LOADKJS');
             $artcookies_compress = Tools::getValue('ARTCOKIECHOICESPRO_COMPRESS');
             $artcookies_position = Tools::getValue('ARTCOKIECHOICESPRO_POSITION');
             $artcookies_disable = Tools::getValue('ARTCOKIECHOICESPRO_DISABLE');
             $artcookies_seo_protection = Tools::getValue('ARTCOKIECHOICESPRO_SEO_PROTECTION');
             $artcookies_seo_bots = $this->normalizeSeoBotList((string) Tools::getValue('ARTCOKIECHOICESPRO_SEO_BOTS'));
+            $artcookies_auto_consent_version = (int) Tools::getValue('ARTCOKIECHOICESPRO_AUTO_CONSENT_VERSION');
 
             if (!in_array($artcookies_position, ['top', 'bottom', 'center'], true)) {
                 $artcookies_position = 'bottom';
@@ -197,20 +214,40 @@ class ArtCokiechoicespro extends Module
             Configuration::updateValue('ARTCOKIECHOICESPRO_BTEXT_COLOR', pSQL($artcookies_tbutton));
             Configuration::updateValue('ARTCOKIECHOICESPRO_POSITION', pSQL($artcookies_position));
             Configuration::updateValue('ARTCOKIECHOICESPRO_DISABLE', pSQL($artcookies_disable));
-            Configuration::updateValue('ARTCOKIECHOICESPRO_LOADKJS', pSQL($artloadjs));
             Configuration::updateValue('ARTCOKIECHOICESPRO_SHADOW', (int) $artcookies_shadow);
             Configuration::updateValue('ARTCOKIECHOICESPRO_COMPRESS', (int) $artcookies_compress);
             Configuration::updateValue('ARTCOKIECHOICESPRO_SEO_PROTECTION', (int) $artcookies_seo_protection);
             Configuration::updateValue('ARTCOKIECHOICESPRO_SEO_BOTS', $artcookies_seo_bots);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_AUTO_CONSENT_VERSION', $artcookies_auto_consent_version ? 1 : 0);
+            $this->incrementConsentVersionIfEnabled((bool) $artcookies_auto_consent_version);
 
             $advanced_setting = $this->renderAdvForm();
             $this->_clearCache('artcookiechoices.tpl');
             $outputadv .= $this->displayConfirmation($this->l('Advanced settings updated'));
         }
 
+        if (Tools::isSubmit('submitConsentLog')) {
+            $active_1 = '';
+            $active_2 = '';
+            $active_3 = 'active';
+            $artcookies_consent_log = (int) Tools::getValue('ARTCOKIECHOICESPRO_CONSENT_LOG');
+            $artcookies_consent_log_retention = (int) Tools::getValue('ARTCOKIECHOICESPRO_CONSENT_LOG_RETENTION');
+
+            if (!in_array($artcookies_consent_log_retention, [6, 12, 24], true)) {
+                $artcookies_consent_log_retention = 12;
+            }
+
+            Configuration::updateValue('ARTCOKIECHOICESPRO_CONSENT_LOG', $artcookies_consent_log ? 1 : 0);
+            Configuration::updateValue('ARTCOKIECHOICESPRO_CONSENT_LOG_RETENTION', $artcookies_consent_log_retention);
+            $this->cleanupConsentLog();
+            $consent_log_setting = $this->renderConsentLogForm();
+            $output_consent_log .= $this->displayConfirmation($this->l('Consent log settings updated'));
+        }
+
         if (Tools::isSubmit('submitUpdate')) {
             $active_1 = 'active';
             $active_2 = '';
+            $active_3 = '';
             $artcookies_text = [];
             $artcookies_linktxt = [];
             $artcookies_buttomtxt = [];
@@ -257,6 +294,7 @@ class ArtCokiechoicespro extends Module
             Configuration::updateValue('ARTCOKIECHOICESPRO_REVOKE', (int) $artcookies_revoke);
             Configuration::updateValue('ARTCOKIECHOICESPRO_TARGET', $artcookies_target);
             $this->saveCookieCategoryStatus();
+            $this->incrementConsentVersionIfEnabled();
 
             $basic_setting = $this->renderForm();
             $this->_clearCache('artcookiechoices.tpl');
@@ -277,10 +315,15 @@ class ArtCokiechoicespro extends Module
             'link' => $link,
             'shop_base_url' => $shop_base_url,
             'module_dir' => $this->_path,
+            'consent_export_url' => $this->context->link->getAdminLink('AdminArtCookieConsentExport'),
+            'consent_export_token' => Tools::getAdminTokenLite('AdminArtCookieConsentExport'),
             'active_1' => $active_1,
             'active_2' => $active_2,
+            'active_3' => $active_3,
+            'active_4' => $active_4,
             'basic_setting' => $basic_setting . $output,
             'advanced_setting' => $advanced_setting . $outputadv,
+            'consent_log_setting' => $consent_log_setting . $output_consent_log,
             ]);
 
         $this->context->smarty->assign('module_dir', $this->_path);
@@ -345,6 +388,29 @@ class ArtCokiechoicespro extends Module
         return $advanced_setting;
     }
 
+    protected function renderConsentLogForm()
+    {
+        $helper = new HelperForm();
+
+        $helper->show_toolbar = false;
+        $helper->table = $this->table;
+        $helper->module = $this;
+        $helper->default_form_language = $this->context->language->id;
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0);
+        $helper->identifier = $this->identifier;
+        $helper->submit_action = 'submitConsentLog';
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
+            . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
+        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->tpl_vars = [
+            'fields_value' => $this->getConfigConsentLogValues(),
+            'languages' => $this->context->controller->getLanguages(),
+            'id_language' => $this->context->language->id,
+        ];
+
+        return $helper->generateForm([$this->getConfigConsentLog()]);
+    }
+
     /**
      * Create the structure of your basic form.
      */
@@ -379,25 +445,6 @@ class ArtCokiechoicespro extends Module
                                 ],
                             'id' => 'id',
                             'name' => 'name',
-                        ],
-                    ],
-                [
-                        'type' => 'switch',
-                        'label' => $this->l('Load jQUERY'),
-                        'name' => Tools::strtoupper($this->name) . '_LOADKJS',
-                        'is_bool' => true,
-                        'desc' => $this->l('If your theme does not load jQUERY'),
-                        'values' => [
-                            [
-                                'id' => 'active_on',
-                                'value' => true,
-                                'label' => $this->l('Enabled'),
-                            ],
-                            [
-                                'id' => 'active_off',
-                                'value' => false,
-                                'label' => $this->l('Disabled'),
-                            ],
                         ],
                     ],
                 /* array(
@@ -503,6 +550,33 @@ class ArtCokiechoicespro extends Module
                         'desc' => $this->l('Link to external privacy information'),
                     ],
                     [
+                        'type' => 'text',
+                        'label' => $this->l('Current consent version'),
+                        'name' => Tools::strtoupper($this->name) . '_CONSENT_VERSION',
+                        'class' => 'fixed-width-sm',
+                        'disabled' => true,
+                        'desc' => $this->l('This value is used to request consent again after relevant configuration changes.'),
+                    ],
+                    [
+                        'type' => 'switch',
+                        'label' => $this->l('Automatic consent version counter'),
+                        'name' => Tools::strtoupper($this->name) . '_AUTO_CONSENT_VERSION',
+                        'is_bool' => true,
+                        'desc' => $this->l('Increase the consent version automatically when module settings are saved.'),
+                        'values' => [
+                            [
+                                'id' => 'auto_consent_version_on',
+                                'value' => true,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'auto_consent_version_off',
+                                'value' => false,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                    ],
+                    [
                         'type' => 'switch',
                         'label' => $this->l('SEO protection'),
                         'name' => Tools::strtoupper($this->name) . '_SEO_PROTECTION',
@@ -551,7 +625,6 @@ class ArtCokiechoicespro extends Module
 
         return [
             'ARTCOKIECHOICESPRO_EXTACTIVE' => Tools::getValue('ARTCOKIECHOICESPRO_EXTACTIVE', Configuration::get('ARTCOKIECHOICESPRO_EXTACTIVE')),
-            'ARTCOKIECHOICESPRO_LOADKJS' => Tools::getValue('ARTCOKIECHOICESPRO_LOADKJS', Configuration::get('ARTCOKIECHOICESPRO_LOADKJS')),
             'ARTCOKIECHOICESPRO_BANNER_COLOR' => Tools::getValue('ARTCOKIECHOICESPRO_BANNER_COLOR', Configuration::get('ARTCOKIECHOICESPRO_BANNER_COLOR')),
             'ARTCOKIECHOICESPRO_TEXT_COLOR' => Tools::getValue('ARTCOKIECHOICESPRO_TEXT_COLOR', Configuration::get('ARTCOKIECHOICESPRO_TEXT_COLOR')),
             'ARTCOKIECHOICESPRO_SHADOW' => Tools::getValue('ARTCOKIECHOICESPRO_SHADOW', Configuration::get('ARTCOKIECHOICESPRO_SHADOW')),
@@ -562,11 +635,73 @@ class ArtCokiechoicespro extends Module
             'ARTCOKIECHOICESPRO_POSITION' => Tools::getValue('ARTCOKIECHOICESPRO_POSITION', Configuration::get('ARTCOKIECHOICESPRO_POSITION')),
             'ARTCOKIECHOICESPRO_DISABLE' => Tools::getValue('ARTCOKIECHOICESPRO_DISABLE', Configuration::get('ARTCOKIECHOICESPRO_DISABLE')),
             'ARTCOKIECHOICESPRO_PRIVACY_EXT' => Tools::getValue('ARTCOKIECHOICESPRO_PRIVACY_EXT', $artcookies_url),
+            'ARTCOKIECHOICESPRO_CONSENT_VERSION' => Tools::getValue('ARTCOKIECHOICESPRO_CONSENT_VERSION', $this->getConsentVersion()),
+            'ARTCOKIECHOICESPRO_AUTO_CONSENT_VERSION' => Tools::getValue('ARTCOKIECHOICESPRO_AUTO_CONSENT_VERSION', Configuration::get('ARTCOKIECHOICESPRO_AUTO_CONSENT_VERSION')),
             'ARTCOKIECHOICESPRO_SEO_PROTECTION' => Tools::getValue('ARTCOKIECHOICESPRO_SEO_PROTECTION', Configuration::get('ARTCOKIECHOICESPRO_SEO_PROTECTION')),
             'ARTCOKIECHOICESPRO_SEO_BOTS' => Tools::getValue(
                 'ARTCOKIECHOICESPRO_SEO_BOTS',
                 $this->normalizeSeoBotList((string) Configuration::get('ARTCOKIECHOICESPRO_SEO_BOTS'))
             ),
+        ];
+    }
+
+    protected function getConfigConsentLog()
+    {
+        return [
+            'form' => [
+                'legend' => [
+                    'title' => $this->l('Consent log settings'),
+                    'icon' => 'icon-lock',
+                ],
+                'input' => [
+                    [
+                        'type' => 'switch',
+                        'label' => $this->l('Enable consent log'),
+                        'name' => Tools::strtoupper($this->name) . '_CONSENT_LOG',
+                        'is_bool' => true,
+                        'desc' => $this->l('Store a lightweight server-side consent record with anonymized IP and hashed technical identifiers.'),
+                        'values' => [
+                            [
+                                'id' => 'consent_log_on',
+                                'value' => true,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'consent_log_off',
+                                'value' => false,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                    ],
+                    [
+                        'type' => 'select',
+                        'label' => $this->l('Consent log retention'),
+                        'name' => Tools::strtoupper($this->name) . '_CONSENT_LOG_RETENTION',
+                        'desc' => $this->l('Automatically delete consent log entries older than the selected retention period.'),
+                        'options' => [
+                            'query' => [
+                                ['id' => '6', 'name' => $this->l('6 months')],
+                                ['id' => '12', 'name' => $this->l('12 months')],
+                                ['id' => '24', 'name' => $this->l('24 months')],
+                            ],
+                            'id' => 'id',
+                            'name' => 'name',
+                        ],
+                    ],
+                ],
+                'submit' => [
+                    'title' => $this->l('Save'),
+                    'name' => 'submitConsentLog',
+                ],
+            ],
+        ];
+    }
+
+    protected function getConfigConsentLogValues()
+    {
+        return [
+            'ARTCOKIECHOICESPRO_CONSENT_LOG' => Tools::getValue('ARTCOKIECHOICESPRO_CONSENT_LOG', Configuration::get('ARTCOKIECHOICESPRO_CONSENT_LOG')),
+            'ARTCOKIECHOICESPRO_CONSENT_LOG_RETENTION' => Tools::getValue('ARTCOKIECHOICESPRO_CONSENT_LOG_RETENTION', $this->getConsentLogRetention()),
         ];
     }
 
@@ -625,6 +760,7 @@ class ArtCokiechoicespro extends Module
                         'lang' => true,
                         'autoload_rte' => true,
                         'desc' => $this->l('Text to show in the cookies banner'),
+                        'class' => 'artcookie-banner-textarea',
                         'cols' => 60,
                         'rows' => 20,
                      ],
@@ -1019,6 +1155,179 @@ class ArtCokiechoicespro extends Module
         return (int) $value;
     }
 
+    public function installConsentLogTable()
+    {
+        $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'artcookie_consent_log` (
+            `id_artcookie_consent_log` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `id_shop` INT UNSIGNED NOT NULL DEFAULT 0,
+            `id_guest` INT UNSIGNED NOT NULL DEFAULT 0,
+            `id_customer` INT UNSIGNED NOT NULL DEFAULT 0,
+            `consent_hash` CHAR(64) NOT NULL,
+            `consent_version` VARCHAR(32) NOT NULL,
+            `preferences_json` TEXT NOT NULL,
+            `action` VARCHAR(32) NOT NULL,
+            `ip_anonymized` VARCHAR(45) NOT NULL DEFAULT \'\',
+            `ip_hash` CHAR(64) NOT NULL,
+            `user_agent_hash` CHAR(64) NOT NULL,
+            `date_add` DATETIME NOT NULL,
+            PRIMARY KEY (`id_artcookie_consent_log`),
+            KEY `idx_artcookie_consent_identity` (`id_shop`, `id_guest`, `id_customer`, `ip_hash`, `user_agent_hash`),
+            KEY `idx_artcookie_consent_hash` (`consent_hash`),
+            KEY `idx_artcookie_consent_date` (`date_add`)
+        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+
+        return (bool) Db::getInstance()->execute($sql)
+            && $this->installConsentLogGuestColumn();
+    }
+
+    public function installConsentLogGuestColumn()
+    {
+        $table = _DB_PREFIX_ . 'artcookie_consent_log';
+        $column = Db::getInstance()->executeS(
+            'SHOW COLUMNS FROM `' . pSQL($table) . '` LIKE \'id_guest\''
+        );
+
+        if (is_array($column) && !empty($column)) {
+            return true;
+        }
+
+        $result = (bool) Db::getInstance()->execute(
+            'ALTER TABLE `' . pSQL($table) . '`
+            ADD `id_guest` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `id_shop`,
+            ADD KEY `idx_artcookie_consent_guest` (`id_shop`, `id_guest`)'
+        );
+
+        return $result;
+    }
+
+    protected function deleteConsentLogTable()
+    {
+        return (bool) Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'artcookie_consent_log`');
+    }
+
+    public function installConsentExportTab()
+    {
+        if ((int) Tab::getIdFromClassName('AdminArtCookieConsentExport') > 0) {
+            return true;
+        }
+
+        $tab = new Tab();
+        $tab->active = 0;
+        $tab->class_name = 'AdminArtCookieConsentExport';
+        $tab->module = $this->name;
+        $tab->id_parent = -1;
+
+        foreach (Language::getLanguages(false) as $language) {
+            $tab->name[(int) $language['id_lang']] = 'Art Cookie Consent Export';
+        }
+
+        return (bool) $tab->add();
+    }
+
+    public function uninstallConsentExportTab()
+    {
+        $id_tab = (int) Tab::getIdFromClassName('AdminArtCookieConsentExport');
+
+        if ($id_tab <= 0) {
+            return true;
+        }
+
+        $tab = new Tab($id_tab);
+
+        return (bool) $tab->delete();
+    }
+
+    public function isConsentLogEnabled()
+    {
+        return (int) Configuration::get('ARTCOKIECHOICESPRO_CONSENT_LOG') === 1;
+    }
+
+    public function getConsentLogRetention()
+    {
+        $retention = (int) Configuration::get('ARTCOKIECHOICESPRO_CONSENT_LOG_RETENTION');
+
+        if (!in_array($retention, [6, 12, 24], true)) {
+            return 12;
+        }
+
+        return $retention;
+    }
+
+    public function getConsentLogToken()
+    {
+        return hash('sha256', _COOKIE_KEY_ . $this->name . '|consentlog');
+    }
+
+    protected function incrementConsentVersionIfEnabled($enabled = null)
+    {
+        if ($enabled === null) {
+            $enabled = (int) Configuration::get('ARTCOKIECHOICESPRO_AUTO_CONSENT_VERSION') === 1;
+        }
+
+        if (!$enabled) {
+            return true;
+        }
+
+        $current_version = $this->getConsentVersion();
+        $next_version = ctype_digit($current_version) ? (string) ((int) $current_version + 1) : '1';
+
+        return (bool) Configuration::updateValue('ARTCOKIECHOICESPRO_CONSENT_VERSION', $next_version);
+    }
+
+    public function anonymizeIpAddress($ip_address)
+    {
+        $ip_address = trim((string) $ip_address);
+
+        if (filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            $parts = explode('.', $ip_address);
+            $parts[3] = '0';
+
+            return implode('.', $parts);
+        }
+
+        if (filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            $packed = @inet_pton($ip_address);
+
+            if ($packed === false) {
+                return '';
+            }
+
+            return inet_ntop(substr($packed, 0, 8) . str_repeat("\0", 8));
+        }
+
+        return '';
+    }
+
+    public function cleanupConsentLog()
+    {
+        $retention = $this->getConsentLogRetention();
+        $threshold = date('Y-m-d H:i:s', strtotime('-' . $retention . ' months'));
+
+        return (bool) Db::getInstance()->delete(
+            'artcookie_consent_log',
+            'date_add < \'' . pSQL($threshold) . '\''
+        );
+    }
+
+    public function getConsentVersion()
+    {
+        $version = (string) Configuration::get('ARTCOKIECHOICESPRO_CONSENT_VERSION');
+
+        if (!$this->isValidConsentVersion($version)) {
+            return '1';
+        }
+
+        return $version;
+    }
+
+    protected function isValidConsentVersion($version)
+    {
+        return is_string($version)
+            && $version !== ''
+            && Tools::strlen($version) <= 32
+            && preg_match('/^[A-Za-z0-9._-]+$/', $version) === 1;
+    }
+
     protected function buildLocalizedDefaultValue($value)
     {
         $localized_value = [];
@@ -1156,16 +1465,30 @@ class ArtCokiechoicespro extends Module
     protected function buildCookieCategoryForFront($category_key, $id_lang, $category_defaults, $required)
     {
         $config_key = Tools::strtoupper($category_key);
+        $english_defaults = $this->getDefaultCookieCategoryTexts();
+        $translated_label = $this->translateCookieCategoryText($category_key, 'label');
+        $translated_description = $this->translateCookieCategoryText($category_key, 'description');
         $label = $this->getLocalizedConfigurationValue(
             'ARTCOKIECHOICESPRO_CAT_' . $config_key . '_LABEL',
             $id_lang,
-            $category_defaults[$category_key]['label']
+            $translated_label
         );
         $description = $this->getLocalizedConfigurationValue(
             'ARTCOKIECHOICESPRO_CAT_' . $config_key . '_DESC',
             $id_lang,
-            $category_defaults[$category_key]['description']
+            $translated_description
         );
+
+        if ($label === $english_defaults[$category_key]['label'] && $translated_label !== $english_defaults[$category_key]['label']) {
+            $label = $translated_label;
+        }
+
+        if (
+            $description === $english_defaults[$category_key]['description']
+            && $translated_description !== $english_defaults[$category_key]['description']
+        ) {
+            $description = $translated_description;
+        }
 
         return [
             'key' => $category_key,
@@ -1198,6 +1521,44 @@ class ArtCokiechoicespro extends Module
         ];
 
         return isset($map[$category_key]) ? $map[$category_key] : [];
+    }
+
+    protected function translateCookieCategoryText($category_key, $field)
+    {
+        $translations = [
+            'necessary' => [
+                'label' => $this->l('Necessary cookies'),
+                'description' => $this->l('Required for the shop to work and cannot be disabled.'),
+            ],
+            'functional' => [
+                'label' => $this->l('Functional cookies'),
+                'description' => $this->l('Help us provide enhanced features and remember your choices.'),
+            ],
+            'analytics' => [
+                'label' => $this->l('Analytics cookies'),
+                'description' => $this->l('Help us understand how customers use the shop.'),
+            ],
+            'performance' => [
+                'label' => $this->l('Performance cookies'),
+                'description' => $this->l('Help us measure and improve site performance.'),
+            ],
+            'marketing' => [
+                'label' => $this->l('Advertising cookies'),
+                'description' => $this->l('Allow personalized advertising and campaign measurement.'),
+            ],
+            'other' => [
+                'label' => $this->l('Other cookies'),
+                'description' => $this->l('Cover additional optional cookies not included in the other categories.'),
+            ],
+        ];
+
+        if (isset($translations[$category_key][$field])) {
+            return $translations[$category_key][$field];
+        }
+
+        $defaults = $this->getDefaultCookieCategoryTexts();
+
+        return isset($defaults[$category_key][$field]) ? $defaults[$category_key][$field] : '';
     }
 
     public function getCmsLinks($lang = null)
@@ -1253,6 +1614,10 @@ class ArtCokiechoicespro extends Module
         $art_extactive = Configuration::get(Tools::strtoupper($this->name . '_EXTACTIVE'));
         $art_target = Configuration::get(Tools::strtoupper($this->name . '_TARGET'));
         $art_consentmode = Configuration::get(Tools::strtoupper($this->name . '_CONSENTMODE'));
+        $art_consent_version = $this->getConsentVersion();
+        $art_consent_log_enabled = $this->isConsentLogEnabled() ? 1 : 0;
+        $art_consent_log_url = $this->context->link->getModuleLink($this->name, 'consentlog', [], true);
+        $art_consent_log_token = $this->getConsentLogToken();
 
         if ($art_customize_button_txt === false || $art_customize_button_txt === '') {
             $art_customize_button_txt = 'Customize';
@@ -1290,6 +1655,10 @@ class ArtCokiechoicespro extends Module
             'art_privacy_button' => $art_privacy_button,
             'art_target' => $art_target,
             'art_consentmode' => (int) $art_consentmode,
+            'art_consent_version' => $art_consent_version,
+            'art_consent_log_enabled' => $art_consent_log_enabled,
+            'art_consent_log_url' => $art_consent_log_url,
+            'art_consent_log_token' => $art_consent_log_token,
             'art_privacy_text_link' => $art_privacy_text_link,
             'art_reject_button_txt' => $art_reject_button_txt,
             'art_customize_button_txt' => $art_customize_button_txt,
@@ -1323,9 +1692,9 @@ class ArtCokiechoicespro extends Module
         $artcookies_button = Configuration::get(Tools::strtoupper($this->name . '_BUTTON_COLOR'));
         $artcookies_shadow = Configuration::get(Tools::strtoupper($this->name . '_SHADOW'));
         $artcookies_tbutton = Configuration::get(Tools::strtoupper($this->name . '_BTEXT_COLOR'));
-        $artloadjs = Configuration::get(Tools::strtoupper($this->name . '_LOADKJS'));
         $artcookies_position = Configuration::get(Tools::strtoupper($this->name . '_POSITION'));
         $art_consentmode = (int) Configuration::get(Tools::strtoupper($this->name . '_CONSENTMODE'));
+        $art_consent_version = $this->getConsentVersion();
         $art_cookie_categories_json = json_encode(
             $this->getCookieCategoriesForFront((int) $this->context->language->id)
         );
@@ -1340,11 +1709,11 @@ class ArtCokiechoicespro extends Module
             'artcookies_cshadow' => $artcookies_cshadow,
             'artcookies_txtcolor' => $artcookies_txtcolor,
             'artcookies_button' => $artcookies_button,
-            'artloadjs' => (int) $artloadjs,
             'arturi' => pSQL($arturi),
             'artcookies_tbutton' => $artcookies_tbutton,
             'artcookies_position' => $artcookies_position,
             'art_consentmode' => $art_consentmode,
+            'art_consent_version' => $art_consent_version,
             'art_cookie_categories_base64' => base64_encode($art_cookie_categories_json),
             ]);
 

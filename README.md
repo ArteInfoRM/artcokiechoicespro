@@ -16,6 +16,9 @@ Consent Mode without requiring core overrides.
 - Consent reset controller protected by module token.
 - Granular preferences stored in `displayCookieConsentPreferences`.
 - Backward-compatible consent flag stored in `displayCookieConsent`.
+- Consent version stored in `displayCookieConsentVersion`, with an automatic counter enabled by default.
+- Consent preference cookies expire after six months and use `SameSite=Lax`, with `Secure` on HTTPS pages.
+- Optional lightweight server-side consent log with anonymized IP, hashed technical identifiers, consent action and retention cleanup.
 - Configurable banner position: top, bottom or center.
 - Configurable optional cookie categories:
   - Functional cookies
@@ -62,6 +65,34 @@ The customize button opens a dedicated preferences popup. Its footer includes:
 The footer and account-page links open the preferences popup instead of resetting
 cookies immediately. The reset controller remains available through the Cancel
 button inside the preferences popup.
+
+Consent choices are stored for six months. The module stores a consent version
+in the visitor cookie and, by default, increments it automatically when module
+settings are saved. Existing visitors will then be asked to review their
+preferences again after relevant banner, category, provider or policy changes.
+
+The automatic consent version counter is available in the advanced
+configuration and is enabled by default.
+
+## Server-Side Consent Log
+
+The server-side consent log is disabled by default. When enabled, the module
+stores a lightweight proof record for each changed consent choice:
+
+- Shop ID, guest ID and customer ID when the customer is logged in.
+- Consent version, action and normalized category preferences.
+- Anonymized IP address.
+- SHA-256 hashes of the IP address, user agent and full consent record.
+
+The module does not store the full IP address or the full user agent in the log
+table. Retention can be configured to 6, 12 or 24 months; cleanup runs
+automatically when a new consent record is written. The default retention is
+12 months.
+
+The Consent log tab includes log configuration and export. Merchants can
+download the minimized consent log in CSV, JSON or XML format, optionally
+filtered by date range and consent action. The consent version is included in
+the exported file.
 
 ## Account Page Link
 
@@ -144,21 +175,16 @@ reads consent state.
 
 ## Release Notes
 
-Version `1.6.2` includes:
+Version `1.6.4` includes:
 
-- Cookie preferences popup redesign.
-- Account-page preferences tile.
-- SEO protection for crawler user agents.
-- Localized installation defaults for banner and button text.
-- Completed module translation keys across bundled languages.
-- Validator-oriented documentation for trusted Back Office HelperForm markup.
-- Early Consent Mode defaults in the header to avoid late-default warnings in
-  Google Tag Assistant.
-- Consent Mode enabled by default on new module installations.
-- Upgrade registration for the `displayHeader` hook when needed.
-- Improved consent reset behavior.
-- Removal of the old documentation image asset.
-- Release archive cleanup through `.gitattributes`.
+- Six-month consent preference cookie lifetime.
+- Automatic consent version counter to invalidate old choices after relevant changes.
+- Optional server-side consent log with anonymized technical identifiers and configurable retention.
+- Consent log export in CSV, JSON and XML formats.
+- Guest ID in the consent log to improve anonymous visitor traceability.
+- Removal of the legacy bundled jQuery loader; the banner now runs only on native JavaScript.
+- `SameSite=Lax` and `Secure` on HTTPS for technical consent cookies.
+- Better keyboard and focus handling in the preferences popup.
 
 ## Support
 

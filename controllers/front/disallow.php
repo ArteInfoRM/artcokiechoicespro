@@ -28,6 +28,7 @@ class ArtcokiechoicesproDisallowModuleFrontController extends ModuleFrontControl
             $cookie_names = [
                 'displayCookieConsent',
                 'displayCookieConsentPreferences',
+                'displayCookieConsentVersion',
             ];
 
             foreach ($cookie_names as $cookie_name) {

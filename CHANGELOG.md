@@ -3,6 +3,26 @@ All notable changes to this project are documented below.
 
 ---
 
+## [1.6.4] - 2026-06-21
+### Added
+- Added a configurable consent version to request consent again when purposes, providers, or policy terms change.
+- Added an optional lightweight server-side consent log with anonymized IP, hashed technical identifiers, consent action and consent version.
+- Added configurable consent log retention with automatic cleanup.
+- Added Back Office consent log export in CSV, JSON and XML formats.
+- Added an automatic consent version counter enabled by default.
+- Added guest ID storage to the server-side consent log.
+- Added focus management, keyboard support, and ARIA improvements to the cookie preferences modal.
+
+### Changed
+- Reduced consent preference cookie lifetime to six months.
+- Added SameSite=Lax and Secure-on-HTTPS attributes to technical consent cookies.
+- Moved consent log settings and export into a dedicated Consent log tab.
+- Removed the consent version filter from the export form because the value is included in exported rows.
+- Removed the legacy bundled jQuery loader and configuration option.
+
+### Fixed
+- Fixed cookie preference category labels and descriptions staying in English on localized front-office pages after installation.
+
 ## [1.6.3] - 2026-06-09
 ### Changed
 - Lowered the minimum declared PrestaShop compatibility from 1.7.8.0 to 1.7.0.0.
