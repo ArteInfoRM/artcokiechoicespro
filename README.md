@@ -148,13 +148,6 @@ The module translation files also include the same interface keys for English,
 Italian, Spanish, French, German, British English and Polish, so back-office and
 front-office labels remain available through the PrestaShop translation system.
 
-## Back Office Rendering
-
-The configuration page uses PrestaShop HelperForm to generate trusted Back
-Office form markup. The Smarty template keeps that generated markup unescaped so
-the form HTML remains functional, with an inline comment documenting why the
-`nofilter` modifier is intentional.
-
 ## Consent Mode Mapping
 
 Google Consent Mode v2 signals are updated after user choices:

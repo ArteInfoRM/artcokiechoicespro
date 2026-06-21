@@ -22,12 +22,18 @@ class ArtcokiechoicesproConsentlogModuleFrontController extends ModuleFrontContr
         parent::initContent();
 
         header('Content-Type: application/json; charset=utf-8');
+        $module = $this->getArtCookieModule();
 
-        if (!$this->module->isConsentLogEnabled()) {
+        if (!$module) {
+            $this->renderJson(false, 'invalid_module');
+        }
+
+        /** @var ArtCokiechoicespro $module */
+        if (!$module->isConsentLogEnabled()) {
             $this->renderJson(false, 'disabled');
         }
 
-        if (!hash_equals($this->module->getConsentLogToken(), (string) Tools::getValue('token'))) {
+        if (!hash_equals($module->getConsentLogToken(), (string) Tools::getValue('token'))) {
             $this->renderJson(false, 'invalid_token');
         }
 
@@ -40,7 +46,7 @@ class ArtcokiechoicesproConsentlogModuleFrontController extends ModuleFrontContr
 
         $consent_version = (string) Tools::getValue('consent_version');
 
-        if ($consent_version !== $this->module->getConsentVersion()) {
+        if ($consent_version !== $module->getConsentVersion()) {
             $this->renderJson(false, 'invalid_version');
         }
 
@@ -56,9 +62,7 @@ class ArtcokiechoicesproConsentlogModuleFrontController extends ModuleFrontContr
             $this->renderJson(false, 'invalid_preferences');
         }
 
-        if (method_exists($this->module, 'installConsentLogTable')) {
-            $this->module->installConsentLogTable();
-        }
+        $module->installConsentLogTable();
 
         $id_shop = (int) $this->context->shop->id;
         $id_guest = $this->getContextGuestId();
@@ -67,7 +71,7 @@ class ArtcokiechoicesproConsentlogModuleFrontController extends ModuleFrontContr
             : 0;
         $ip_address = (string) Tools::getRemoteAddr();
         $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? (string) $_SERVER['HTTP_USER_AGENT'] : '';
-        $ip_anonymized = $this->module->anonymizeIpAddress($ip_address);
+        $ip_anonymized = $module->anonymizeIpAddress($ip_address);
         $ip_hash = hash('sha256', _COOKIE_KEY_ . '|ip|' . $ip_address);
         $user_agent_hash = hash('sha256', _COOKIE_KEY_ . '|ua|' . $user_agent);
         $consent_hash = hash(
@@ -84,7 +88,7 @@ class ArtcokiechoicesproConsentlogModuleFrontController extends ModuleFrontContr
         );
 
         if ($this->hasSameLatestConsent($id_shop, $id_guest, $id_customer, $ip_hash, $user_agent_hash, $consent_hash)) {
-            $this->module->cleanupConsentLog();
+            $module->cleanupConsentLog();
             $this->renderJson(true, 'unchanged');
         }
 
@@ -102,8 +106,26 @@ class ArtcokiechoicesproConsentlogModuleFrontController extends ModuleFrontContr
             'date_add' => date('Y-m-d H:i:s'),
         ], false, true, Db::INSERT);
 
-        $this->module->cleanupConsentLog();
+        $module->cleanupConsentLog();
         $this->renderJson((bool) $inserted, $inserted ? 'logged' : 'insert_failed');
+    }
+
+    /**
+     * @return ArtCokiechoicespro|false
+     */
+    protected function getArtCookieModule()
+    {
+        if ($this->module instanceof ArtCokiechoicespro) {
+            return $this->module;
+        }
+
+        $module = Module::getInstanceByName('artcokiechoicespro');
+
+        if ($module instanceof ArtCokiechoicespro) {
+            return $module;
+        }
+
+        return false;
     }
 
     protected function normalizePreferences($raw_preferences)
@@ -131,7 +153,7 @@ class ArtcokiechoicesproConsentlogModuleFrontController extends ModuleFrontContr
             return (int) $this->context->cookie->id_guest;
         }
 
-        if (isset($this->context->cart) && isset($this->context->cart->id_guest)) {
+        if (isset($this->context->cart)) {
             return (int) $this->context->cart->id_guest;
         }
 

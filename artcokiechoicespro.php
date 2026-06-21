@@ -307,7 +307,7 @@ class ArtCokiechoicespro extends Module
             'disallow',
             [
                 'token' => md5(_COOKIE_KEY_ . $this->name),
-                ],
+            ],
             true
         );
 
@@ -324,7 +324,7 @@ class ArtCokiechoicespro extends Module
             'basic_setting' => $basic_setting . $output,
             'advanced_setting' => $advanced_setting . $outputadv,
             'consent_log_setting' => $consent_log_setting . $output_consent_log,
-            ]);
+        ]);
 
         $this->context->smarty->assign('module_dir', $this->_path);
 
@@ -419,54 +419,33 @@ class ArtCokiechoicespro extends Module
         return [
             'form' => [
                 'input' => [
-                [
+                    [
                         'type' => 'color',
                         'label' => $this->l('Background colour'),
                         'name' => Tools::strtoupper($this->name) . '_BANNER_COLOR',
                         'desc' => $this->l('Colour banner cookies background'),
                     ],
-
-                [
+                    [
                         'type' => 'color',
                         'label' => $this->l('Text colour'),
                         'name' => Tools::strtoupper($this->name) . '_TEXT_COLOR',
                         'desc' => $this->l('Colour for the text in the Banner Cookies'),
                     ],
-                [
+                    [
                         'type' => 'select',
                         'label' => $this->l('Banner Position'),
                         'name' => Tools::strtoupper($this->name) . '_POSITION',
-
                         'options' => [
                             'query' => [
-                                 ['id' => 'top', 'name' => $this->l('top')],
-                                 ['id' => 'bottom', 'name' => $this->l('bottom')],
-                                 ['id' => 'center', 'name' => $this->l('center')],
-                                ],
+                                ['id' => 'top', 'name' => $this->l('top')],
+                                ['id' => 'bottom', 'name' => $this->l('bottom')],
+                                ['id' => 'center', 'name' => $this->l('center')],
+                            ],
                             'id' => 'id',
                             'name' => 'name',
                         ],
                     ],
-                /* array(
-                        'type' => 'switch',
-                        'label' => $this->l('JS Compress'),
-                        'name' => Tools::strtoupper($this->name).'_COMPRESS',
-                        'is_bool' => true,
-                        'desc' => $this->l('Uses compressed js to reduce loading times'),
-                        'values' => array(
-                            array(
-                                'id' => 'active_on',
-                                'value' => true,
-                                'label' => $this->l('Enabled')
-                            ),
-                            array(
-                                'id' => 'active_off',
-                                'value' => false,
-                                'label' => $this->l('Disabled')
-                            )
-                        ),
-                    ),	*/
-                [
+                    [
                         'type' => 'switch',
                         'label' => $this->l('Add shadow'),
                         'name' => Tools::strtoupper($this->name) . '_SHADOW',
@@ -485,13 +464,13 @@ class ArtCokiechoicespro extends Module
                             ],
                         ],
                     ],
-                [
+                    [
                         'type' => 'color',
                         'label' => $this->l('Shadow colour'),
                         'name' => Tools::strtoupper($this->name) . '_SHADOW_COLOR',
                         'desc' => $this->l('Colour for the shadow in the Banner Cookies'),
                     ],
-                [
+                    [
                         'type' => 'color',
                         'label' => $this->l('Button colour'),
                         'name' => Tools::strtoupper($this->name) . '_BUTTON_COLOR',
@@ -503,7 +482,7 @@ class ArtCokiechoicespro extends Module
                         'name' => Tools::strtoupper($this->name) . '_BTEXT_COLOR',
                         'desc' => $this->l('Colour for the text in button'),
                     ],
-                [
+                    [
                         'type' => 'switch',
                         'label' => $this->l('External link'),
                         'name' => Tools::strtoupper($this->name) . '_EXTACTIVE',
@@ -522,26 +501,7 @@ class ArtCokiechoicespro extends Module
                             ],
                         ],
                     ],
-                /*array(
-                        'type' => 'switch',
-                        'label' => $this->l('Click on the page'),
-                        'name' => Tools::strtoupper($this->name).'_DISABLE',
-                        'is_bool' => true,
-                        'desc' => $this->l('Disable the click on the page'),
-                        'values' => array(
-                            array(
-                                'id' => 'active_on',
-                                'value' => true,
-                                'label' => $this->l('Enabled')
-                            ),
-                            array(
-                                'id' => 'active_off',
-                                'value' => false,
-                                'label' => $this->l('Disabled')
-                            )
-                        ),
-                    ),	*/
-                [
+                    [
                         'type' => 'text',
                         'label' => $this->l('Alternative Privacy URL'),
                         'name' => Tools::strtoupper($this->name) . '_PRIVACY_EXT',
@@ -763,23 +723,23 @@ class ArtCokiechoicespro extends Module
                         'class' => 'artcookie-banner-textarea',
                         'cols' => 60,
                         'rows' => 20,
-                     ],
-                     [
+                    ],
+                    [
                         'type' => 'text',
                         'label' => $this->l('Privacy Link Text'),
                         'name' => Tools::strtoupper($this->name) . '_LINKTXT',
                         'lang' => true,
                         'autoload_rte' => true,
                         'desc' => $this->l('Text to privacy link'),
-                         ],
-                     [
+                    ],
+                    [
                         'type' => 'text',
                         'label' => $this->l('Buttom Reject Text'),
                         'name' => Tools::strtoupper($this->name) . '_REJECT',
                         'lang' => true,
                         'autoload_rte' => true,
                         'desc' => $this->l('Text buttom'),
-                         ],
+                    ],
                     [
                         'type' => 'text',
                         'label' => $this->l('Buttom Accept Text'),
@@ -787,7 +747,7 @@ class ArtCokiechoicespro extends Module
                         'lang' => true,
                         'autoload_rte' => true,
                         'desc' => $this->l('Text buttom'),
-                        ],
+                    ],
                     [
                         'type' => 'text',
                         'label' => $this->l('Customize Button Text'),
@@ -820,11 +780,11 @@ class ArtCokiechoicespro extends Module
                         'desc' => $this->l('The target attribute specifies where to open the linked document'),
                         'options' => [
                             'query' => [
-                                 ['id' => '_self', 'name' => $this->l('_self: opens the linked document in the same frame as it was clicked (this is default)')],
-                                 ['id' => '_blank', 'name' => $this->l('_blank: opens the linked document in a new window or tab')],
-                                 ['id' => '_parent', 'name' => $this->l('_parent: opens the linked document in the parent frame')],
-                                 ['id' => '_top', 'name' => $this->l('_top: opens the linked document in the full body of the window')],
-                                 ],
+                                ['id' => '_self', 'name' => $this->l('_self: opens the linked document in the same frame as it was clicked (this is default)')],
+                                ['id' => '_blank', 'name' => $this->l('_blank: opens the linked document in a new window or tab')],
+                                ['id' => '_parent', 'name' => $this->l('_parent: opens the linked document in the parent frame')],
+                                ['id' => '_top', 'name' => $this->l('_top: opens the linked document in the full body of the window')],
+                            ],
                             'id' => 'id',
                             'name' => 'name',
                         ],
@@ -1207,12 +1167,12 @@ class ArtCokiechoicespro extends Module
 
     public function installConsentExportTab()
     {
-        if ((int) Tab::getIdFromClassName('AdminArtCookieConsentExport') > 0) {
+        if ($this->getConsentExportTabId() > 0) {
             return true;
         }
 
         $tab = new Tab();
-        $tab->active = 0;
+        $tab->active = false;
         $tab->class_name = 'AdminArtCookieConsentExport';
         $tab->module = $this->name;
         $tab->id_parent = -1;
@@ -1226,7 +1186,7 @@ class ArtCokiechoicespro extends Module
 
     public function uninstallConsentExportTab()
     {
-        $id_tab = (int) Tab::getIdFromClassName('AdminArtCookieConsentExport');
+        $id_tab = $this->getConsentExportTabId();
 
         if ($id_tab <= 0) {
             return true;
@@ -1235,6 +1195,15 @@ class ArtCokiechoicespro extends Module
         $tab = new Tab($id_tab);
 
         return (bool) $tab->delete();
+    }
+
+    protected function getConsentExportTabId()
+    {
+        return (int) Db::getInstance()->getValue(
+            'SELECT `id_tab`
+            FROM `' . _DB_PREFIX_ . 'tab`
+            WHERE `class_name` = \'' . pSQL('AdminArtCookieConsentExport') . '\''
+        );
     }
 
     public function isConsentLogEnabled()
@@ -1670,7 +1639,7 @@ class ArtCokiechoicespro extends Module
             'art_cookie_preferences_title' => $art_cookie_preferences_title,
             'art_disallow_link' => $art_disallow_link,
             'art_cookie_categories_base64' => base64_encode($art_cookie_categories_json),
-            ]);
+        ]);
 
         return $this->display(__FILE__, 'artcookiechoices.tpl');
     }
@@ -1715,7 +1684,7 @@ class ArtCokiechoicespro extends Module
             'art_consentmode' => $art_consentmode,
             'art_consent_version' => $art_consent_version,
             'art_cookie_categories_base64' => base64_encode($art_cookie_categories_json),
-            ]);
+        ]);
 
         return $this->display(__FILE__, 'artcookiesheader.tpl');
     }
